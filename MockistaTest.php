@@ -4,6 +4,9 @@ use Mockista\MethodInterface;
 
 require_once __DIR__ . "/bootstrap.php";
 
+class MockistaTestException extends Exception
+{
+}
 
 // require_once "PHPUnit/Framework.php";
 
@@ -47,6 +50,16 @@ class MockistaTest extends PHPUnit_Framework_TestCase
 		$this->object->abc()->andReturn(11);
 		$this->object->freeze();
 		$this->assertEquals(11, $this->object->abc());
+	}
+
+	/**
+	 * @expectedException MockistaTestException
+	 */
+	public function testMethodThrow()
+	{
+		$this->object->abc()->andThrow(new MockistaTestException);
+		$this->object->freeze();
+		$this->object->abc();
 	}
 
 }

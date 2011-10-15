@@ -1,6 +1,7 @@
 <?php
 
 namespace Mockista;
+use Exception;
 
 function mock()
 {
@@ -160,6 +161,9 @@ class MockMethod implements MethodInterface
 		switch ($this->invokeStrategy) {
 			case self::INVOKE_STRATEGY_RETURN:
 				return $this->invokeValue;
+				break;
+			case self::INVOKE_STRATEGY_THROW:
+				throw $this->invokeValue;
 				break;
 			
 			default:
