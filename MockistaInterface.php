@@ -26,4 +26,6 @@ interface MethodInterface
 	public function andThrow($throwException);
 
 	public function andCallback($callback);
+
+	public function invoke($args);
 }

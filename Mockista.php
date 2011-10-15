@@ -34,6 +34,10 @@ class Mock implements MockInterface
 		if (self::MODE_LEARNING == $this->__mode) {
 			$this->__methods[$name] = new MockMethod($name, $args);
 			return $this->__methods[$name];
+		} else if (self::MODE_COLLECTING == $this->__mode) {
+			if (array_key_exists($name, $this->__methods)) {
+				return $this->__methods[$name]->invoke($args);
+			}
 		}
 	}
 }
@@ -45,11 +49,18 @@ class MockMethod implements MethodInterface
 	const CALL_TYPE_AT_LEAST = 2;
 	const CALL_TYPE_NO_MORE_THAN = 3;
 
+	const INVOKE_STRATEGY_RETURN = 1;
+	const INVOKE_STRATEGY_THROW = 2;
+	const INVOKE_STRATEGY_CALLBACK = 3;
+
 	private $name;
 	private $args;
 
 	private $callType;
 	private $callCount;
+
+	private $invokeStrategy;
+	private $invokeValue;
 
 	public function __construct($name, $args)
 	{
@@ -129,15 +140,31 @@ class MockMethod implements MethodInterface
 
 	public function andThrow($throwException)
 	{
-		$this->invokeStrategy = self::INVOKE_STRATEGY_RETURN;
+		$this->invokeStrategy = self::INVOKE_STRATEGY_THROW;
 		$this->invokeValue = $throwException;
 		return $this;
 	}
 
 	public function andCallback($callback)
 	{
-		$this->invokeStrategy = self::INVOKE_STRATEGY_RETURN;
+		$this->invokeStrategy = self::INVOKE_STRATEGY_CALLBACK;
 		$this->invokeValue = $callback;
 		return $this;
+	}
+
+	public function invoke($args)
+	{
+		if ($args !== $this->args) {
+			throw new Exception(); // TODO
+		}
+		switch ($this->invokeStrategy) {
+			case self::INVOKE_STRATEGY_RETURN:
+				return $this->invokeValue;
+				break;
+			
+			default:
+				throw new Exception(); // TODO
+				break;
+		}
 	}
 }

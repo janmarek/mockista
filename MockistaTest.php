@@ -41,4 +41,12 @@ class MockistaTest extends PHPUnit_Framework_TestCase
 		$method = $this->object->abc();
 		$this->assertTrue($method instanceof MethodInterface);
 	}
+
+	public function testMethodReturn()
+	{
+		$this->object->abc()->andReturn(11);
+		$this->object->freeze();
+		$this->assertEquals(11, $this->object->abc());
+	}
+
 }
