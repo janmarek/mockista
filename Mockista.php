@@ -40,22 +40,41 @@ class Mock implements MockInterface
 
 	private function hashArgs($args)
 	{
-		return md5(serialize($args));
+		if (array() == $args) {
+			return 0;
+		} else {
+		       return md5(serialize($args));
+		}
+	}
+
+	private function useHash($name, $args, $hash)
+	{
+		if ($hash !== 0 && isset($this->__methods[$name][$hash])) {
+			return $hash;
+		} else if (isset($this->__methods[$name][0])) {
+			return 0;
+		} else {
+			throw new Exception("Invalid args", MockException::CODE_INVALID_ARGS);
+		}
+	}
+
+	private function checkMethodsNamespace($name)
+	{
+		if (! isset($this->__methods[$name])) {
+			$this->__methods[$name] = array();
+		}
 	}
 
 	public function __call($name, $args)
 	{
 		$hash = $this->hashArgs($args);
+		$this->checkMethodsNamespace($name);
 		if (self::MODE_LEARNING == $this->__mode) {
-			if (! isset($this->__methods[$name])) {
-				$this->__methods[$name] = array();
-			}
 			$this->__methods[$name][$hash] = new MockMethod($args);
 			return $this->__methods[$name][$hash];
 		} else if (self::MODE_COLLECTING == $this->__mode) {
-			if (array_key_exists($name, $this->__methods)) {
-				return $this->__methods[$name][$hash]->invoke($args);
-			}
+			$useHash = $this->useHash($name, $args, $hash);
+			return $this->__methods[$name][$useHash]->invoke($args);
 		}
 	}
 }
@@ -122,9 +141,6 @@ class MockMethod implements MethodInterface
 	
 	public function invoke($args)
 	{
-		if ($args !== $this->args) {
-			throw new MockException("Args are not same as expected", MockException::CODE_INVALID_ARGS);
-		}
 		switch ($this->invokeStrategy) {
 			case self::INVOKE_STRATEGY_RETURN:
 				$this->callCountReal++;

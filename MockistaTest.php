@@ -145,9 +145,12 @@ class MockistaTest extends PHPUnit_Framework_TestCase
 	{
 		$this->object->abc(1)->andReturn(2);
 		$this->object->abc(2)->andReturn(3);
+		$this->object->abc()->andReturn(4);
 		$this->object->freeze();
 
 		$this->assertEquals(2, $this->object->abc(1));
 		$this->assertEquals(3, $this->object->abc(2));
+		$this->assertEquals(4, $this->object->abc());
+		$this->assertEquals(4, $this->object->abc('aa'));
 	}
 }
