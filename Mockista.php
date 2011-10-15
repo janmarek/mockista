@@ -1,7 +1,6 @@
 <?php
 
 namespace Mockista;
-use Exception;
 
 function mock()
 {
