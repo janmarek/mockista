@@ -8,6 +8,13 @@ function mock()
 	return new Mock();
 }
 
+class MockException extends \Exception
+{
+	const CODE_EXACTLY = 1;
+	const CODE_AT_LEAST = 2;
+	const CODE_NO_MORE_THAN = 3;
+	const CODE_INVALID_ARGS = 4;
+}
 
 class Mock implements MockInterface
 {
@@ -72,30 +79,33 @@ class MockMethod implements MethodInterface
 	{
 		$passed = true;
 		$message = "";
-		$code = $this->callType;
+		$code = 0;
 
 		switch ($this->callType) {
 			case self::CALL_TYPE_EXACTLY:
 				$passed = $this->callCount == $this->callCountReal;
 				$message = "Expected {$this->callCount} and called {$this->callCountReal}";
+				$code = MockException::CODE_EXACTLY;
 				break;
 
 			case self::CALL_TYPE_AT_LEAST:
 				$passed = $this->callCount <= $this->callCountReal;
 				$message = "Expected at least {$this->callCount} and called {$this->callCountReal}";
+				$code = MockException::CODE_AT_LEAST;
 				break;
 
 			case self::CALL_TYPE_NO_MORE_THAN:
 				$passed = $this->callCount >= $this->callCountReal;
 				$message = "Expected no more than {$this->callCount} and called {$this->callCountReal}";
-					break;
+				$code = MockException::CODE_NO_MORE_THAN;
+				break;
 			
 			default:
 				break;
 		}
 
 		if (! $passed) {
-			throw new Exception($message, $code);
+			throw new MockException($message, $code);
 		}
 	}
 
@@ -181,7 +191,7 @@ class MockMethod implements MethodInterface
 	public function invoke($args)
 	{
 		if ($args !== $this->args) {
-			throw new Exception(); // TODO
+			throw new MockException("Args are not same as expected", MockException::CODE_INVALID_ARGS);
 		}
 		switch ($this->invokeStrategy) {
 			case self::INVOKE_STRATEGY_RETURN:
