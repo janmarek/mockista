@@ -59,6 +59,7 @@ class MockistaTest extends PHPUnit_Framework_TestCase
 		$this->object->freeze();
 		$this->assertEquals('AAA', $this->object->abc('aaa'));
 	}
+	
 	/**
 	 * @expectedException MockistaTestException
 	 */
@@ -67,6 +68,77 @@ class MockistaTest extends PHPUnit_Framework_TestCase
 		$this->object->abc()->andThrow(new MockistaTestException);
 		$this->object->freeze();
 		$this->object->abc();
+	}
+
+	/**
+	 * @expectedException Exception
+	 * @expectedExceptionCode 1
+	 */
+	public function testCollectNever()
+	{
+		$this->object->abc()->never();
+		$this->object->freeze()->abc();
+		$this->object->collect();
+	}
+
+	public function testCollectExactly()
+	{
+		$this->object->abc()->exactly(3);
+		$this->object->freeze()->abc();
+		$this->object->abc();
+		$this->object->abc();
+		$this->object->collect();
+	}
+
+	/**
+	 * @expectedException Exception
+	 * @expectedExceptionCode 1
+	 */
+	public function testCollectExactlyBad()
+	{
+		$this->object->abc()->exactly(2);
+		$this->object->freeze()->collect();
+	}
+
+	public function testCollectAtLeast()
+	{
+		$this->object->abc()->atLeast(2);
+		$this->object->freeze()->abc();
+		$this->object->abc();
+		$this->object->abc();
+		$this->object->collect();
+	}
+
+	/**
+	 * @expectedException Exception
+	 * @expectedExceptionCode 2
+	 */
+	public function testCollectAtLeastBad()
+	{
+		$this->object->abc()->atLeast(2);
+		$this->object->freeze()->collect();
+	}
+
+	public function testCollectNoMoreThan()
+	{
+		$this->object->abc()->noMoreThan(3);
+		$this->object->freeze()->abc();
+		$this->object->abc();
+		$this->object->abc();
+		$this->object->collect();
+	}
+
+	/**
+	 * @expectedException Exception
+	 * @expectedExceptionCode 3
+	 */
+	public function testCollectNoMoreThanBad()
+	{
+		$this->object->abc()->noMoreThan(2);
+		$this->object->freeze()->abc();
+		$this->object->abc();
+		$this->object->abc();
+		$this->object->collect();
 	}
 
 }

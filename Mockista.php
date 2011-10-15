@@ -19,15 +19,14 @@ class Mock implements MockInterface
 	public function freeze()
 	{
 		$this->__mode = self::MODE_COLLECTING;
+		return $this;
 	}
 
 	public function collect()
 	{
-		$collect = array();
-		foreach ($this->methods as $method) {
-			$collect = array_merge($collect, $method->collect());
+		foreach ($this->__methods as $method) {
+			$method->collect();
 		}
-		return $collect;
 	}
 
 	public function __call($name, $args)
@@ -63,6 +62,8 @@ class MockMethod implements MethodInterface
 	private $invokeStrategy;
 	private $invokeValue;
 
+	private $callCountReal = 0;
+
 	public function __construct($name, $args)
 	{
 		$this->name = $name;
@@ -71,7 +72,33 @@ class MockMethod implements MethodInterface
 
 	public function collect()
 	{
-		return array();
+		$passed = true;
+		$message = "";
+		$code = $this->callType;
+
+		switch ($this->callType) {
+			case self::CALL_TYPE_EXACTLY:
+				$passed = $this->callCount == $this->callCountReal;
+				$message = "Expected {$this->callCount} and called {$this->callCountReal}";
+				break;
+
+			case self::CALL_TYPE_AT_LEAST:
+				$passed = $this->callCount <= $this->callCountReal;
+				$message = "Expected at least {$this->callCount} and called {$this->callCountReal}";
+				break;
+
+			case self::CALL_TYPE_NO_MORE_THAN:
+				$passed = $this->callCount >= $this->callCountReal;
+				$message = "Expected no more than {$this->callCount} and called {$this->callCountReal}";
+					break;
+			
+			default:
+				break;
+		}
+
+		if (! $passed) {
+			throw new Exception($message, $code);
+		}
 	}
 
 	public function once()
@@ -160,16 +187,20 @@ class MockMethod implements MethodInterface
 		}
 		switch ($this->invokeStrategy) {
 			case self::INVOKE_STRATEGY_RETURN:
+				$this->callCountReal++;
 				return $this->invokeValue;
 				break;
 			case self::INVOKE_STRATEGY_THROW:
+				$this->callCountReal++;
 				throw $this->invokeValue;
 				break;
 			case self::INVOKE_STRATEGY_CALLBACK:
+				$this->callCountReal++;
 				return call_user_func_array($this->invokeValue, $args);
 			
 			default:
-				throw new Exception(); // TODO
+				$this->callCountReal++;
+				return;
 				break;
 		}
 	}
