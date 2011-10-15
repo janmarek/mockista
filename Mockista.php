@@ -165,6 +165,8 @@ class MockMethod implements MethodInterface
 			case self::INVOKE_STRATEGY_THROW:
 				throw $this->invokeValue;
 				break;
+			case self::INVOKE_STRATEGY_CALLBACK:
+				return call_user_func_array($this->invokeValue, $args);
 			
 			default:
 				throw new Exception(); // TODO

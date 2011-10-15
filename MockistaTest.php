@@ -52,6 +52,13 @@ class MockistaTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(11, $this->object->abc());
 	}
 
+
+	public function testMethodCallback()
+	{
+		$this->object->abc('aaa')->andCallback(function($name){return strtoupper($name);});
+		$this->object->freeze();
+		$this->assertEquals('AAA', $this->object->abc('aaa'));
+	}
 	/**
 	 * @expectedException MockistaTestException
 	 */
