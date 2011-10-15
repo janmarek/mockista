@@ -108,6 +108,31 @@ class MockMethod implements MethodInterface
 			throw new MockException($message, $code);
 		}
 	}
+	
+	public function invoke($args)
+	{
+		if ($args !== $this->args) {
+			throw new MockException("Args are not same as expected", MockException::CODE_INVALID_ARGS);
+		}
+		switch ($this->invokeStrategy) {
+			case self::INVOKE_STRATEGY_RETURN:
+				$this->callCountReal++;
+				return $this->invokeValue;
+				break;
+			case self::INVOKE_STRATEGY_THROW:
+				$this->callCountReal++;
+				throw $this->invokeValue;
+				break;
+			case self::INVOKE_STRATEGY_CALLBACK:
+				$this->callCountReal++;
+				return call_user_func_array($this->invokeValue, $args);
+			
+			default:
+				$this->callCountReal++;
+				return;
+				break;
+		}
+	}
 
 	public function once()
 	{
@@ -188,28 +213,4 @@ class MockMethod implements MethodInterface
 		return $this;
 	}
 
-	public function invoke($args)
-	{
-		if ($args !== $this->args) {
-			throw new MockException("Args are not same as expected", MockException::CODE_INVALID_ARGS);
-		}
-		switch ($this->invokeStrategy) {
-			case self::INVOKE_STRATEGY_RETURN:
-				$this->callCountReal++;
-				return $this->invokeValue;
-				break;
-			case self::INVOKE_STRATEGY_THROW:
-				$this->callCountReal++;
-				throw $this->invokeValue;
-				break;
-			case self::INVOKE_STRATEGY_CALLBACK:
-				$this->callCountReal++;
-				return call_user_func_array($this->invokeValue, $args);
-			
-			default:
-				$this->callCountReal++;
-				return;
-				break;
-		}
-	}
 }
