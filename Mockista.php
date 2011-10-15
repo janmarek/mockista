@@ -32,7 +32,7 @@ class Mock implements MockInterface
 	public function __call($name, $args)
 	{
 		if (self::MODE_LEARNING == $this->__mode) {
-			$this->__methods[$name] = new MockMethod($name, $args);
+			$this->__methods[$name] = new MockMethod($args);
 			return $this->__methods[$name];
 		} else if (self::MODE_COLLECTING == $this->__mode) {
 			if (array_key_exists($name, $this->__methods)) {
@@ -53,7 +53,6 @@ class MockMethod implements MethodInterface
 	const INVOKE_STRATEGY_THROW = 2;
 	const INVOKE_STRATEGY_CALLBACK = 3;
 
-	private $name;
 	private $args;
 
 	private $callType;
@@ -64,9 +63,8 @@ class MockMethod implements MethodInterface
 
 	private $callCountReal = 0;
 
-	public function __construct($name, $args)
+	public function __construct($args)
 	{
-		$this->name = $name;
 		$this->args = $args;
 	}
 
