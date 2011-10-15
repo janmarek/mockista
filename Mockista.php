@@ -32,18 +32,29 @@ class Mock implements MockInterface
 	public function collect()
 	{
 		foreach ($this->__methods as $method) {
-			$method->collect();
+			foreach ($method as $argCombinationMethod) {
+				$argCombinationMethod->collect();
+			}
 		}
+	}
+
+	private function hashArgs($args)
+	{
+		return md5(serialize($args));
 	}
 
 	public function __call($name, $args)
 	{
+		$hash = $this->hashArgs($args);
 		if (self::MODE_LEARNING == $this->__mode) {
-			$this->__methods[$name] = new MockMethod($args);
-			return $this->__methods[$name];
+			if (! isset($this->__methods[$name])) {
+				$this->__methods[$name] = array();
+			}
+			$this->__methods[$name][$hash] = new MockMethod($args);
+			return $this->__methods[$name][$hash];
 		} else if (self::MODE_COLLECTING == $this->__mode) {
 			if (array_key_exists($name, $this->__methods)) {
-				return $this->__methods[$name]->invoke($args);
+				return $this->__methods[$name][$hash]->invoke($args);
 			}
 		}
 	}
