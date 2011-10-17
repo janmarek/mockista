@@ -5,7 +5,7 @@ namespace Mockista;
 interface MockInterface
 {
 	public function freeze();
-	public function collect();
+	public function assertExpectations();
 }
 
 interface MethodInterface

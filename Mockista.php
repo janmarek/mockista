@@ -28,11 +28,11 @@ class Mock implements MockInterface
 		return $this;
 	}
 
-	public function collect()
+	public function assertExpectations()
 	{
 		foreach ($this->__methods as $method) {
 			foreach ($method as $argCombinationMethod) {
-				$argCombinationMethod->collect();
+				$argCombinationMethod->assertExpectations();
 			}
 		}
 	}
@@ -104,7 +104,7 @@ class MockMethod implements MethodInterface
 		$this->args = $args;
 	}
 
-	public function collect()
+	public function assertExpectations()
 	{
 		$passed = true;
 		$message = "";

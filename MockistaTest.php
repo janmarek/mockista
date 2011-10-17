@@ -1,6 +1,9 @@
 <?php
 
 use Mockista\MethodInterface;
+use Mockista\mock as mock;
+
+mock();
 
 require_once __DIR__ . "/bootstrap.php";
 
@@ -8,10 +11,8 @@ class MockistaTestException extends Exception
 {
 }
 
-// require_once "PHPUnit/Framework.php";
 
 /**
- * undocumented class
  *
  * @author Jiri Knesl
 **/
@@ -78,7 +79,7 @@ class MockistaTest extends PHPUnit_Framework_TestCase
 	{
 		$this->object->abc()->never();
 		$this->object->freeze()->abc();
-		$this->object->collect();
+		$this->object->assertExpectations();
 	}
 
 	public function testCollectExactly()
@@ -87,7 +88,7 @@ class MockistaTest extends PHPUnit_Framework_TestCase
 		$this->object->freeze()->abc();
 		$this->object->abc();
 		$this->object->abc();
-		$this->object->collect();
+		$this->object->assertExpectations();
 	}
 
 	/**
@@ -97,7 +98,7 @@ class MockistaTest extends PHPUnit_Framework_TestCase
 	public function testCollectExactlyBad()
 	{
 		$this->object->abc()->exactly(2);
-		$this->object->freeze()->collect();
+		$this->object->freeze()->assertExpectations();
 	}
 
 	public function testCollectAtLeast()
@@ -106,7 +107,7 @@ class MockistaTest extends PHPUnit_Framework_TestCase
 		$this->object->freeze()->abc();
 		$this->object->abc();
 		$this->object->abc();
-		$this->object->collect();
+		$this->object->assertExpectations();
 	}
 
 	/**
@@ -116,7 +117,7 @@ class MockistaTest extends PHPUnit_Framework_TestCase
 	public function testCollectAtLeastBad()
 	{
 		$this->object->abc()->atLeast(2);
-		$this->object->freeze()->collect();
+		$this->object->freeze()->assertExpectations();
 	}
 
 	public function testCollectNoMoreThan()
@@ -125,7 +126,7 @@ class MockistaTest extends PHPUnit_Framework_TestCase
 		$this->object->freeze()->abc();
 		$this->object->abc();
 		$this->object->abc();
-		$this->object->collect();
+		$this->object->assertExpectations();
 	}
 
 	/**
@@ -138,7 +139,7 @@ class MockistaTest extends PHPUnit_Framework_TestCase
 		$this->object->freeze()->abc();
 		$this->object->abc();
 		$this->object->abc();
-		$this->object->collect();
+		$this->object->assertExpectations();
 	}
 
 	public function testMultipleCalls()
