@@ -4,16 +4,24 @@ namespace Mockista;
 
 function mock($defaults = array())
 {
-	$mock = new Mock();
-	foreach ($defaults as $key=>$default) {
-		if ($default instanceof \Closure) {
-			$mock->$key()->andCallback($default);
-		} else {
-			$mock->$key = $default;
+	return MockFactory::create($defaults);
+}
+
+class MockFactory
+{
+	static function create($defaults)
+	{
+		$mock = new Mock();
+		foreach ($defaults as $key=>$default) {
+			if ($default instanceof \Closure) {
+				$mock->$key()->andCallback($default);
+			} else {
+				$mock->$key = $default;
+			}
 		}
+		Mock::$__instances[] = $mock;
+		return $mock;
 	}
-	Mock::$__instances[] = $mock;
-	return $mock;
 }
 
 if (class_exists("\PHPUnit_Framework_AssertionFailedError")) {
