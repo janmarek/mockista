@@ -1,9 +1,6 @@
 <?php
 
 use Mockista\MethodInterface;
-use Mockista\mock as mock;
-
-mock();
 
 require_once __DIR__ . "/bootstrap.php";
 
@@ -153,5 +150,13 @@ class MockistaTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(3, $this->object->abc(2));
 		$this->assertEquals(4, $this->object->abc());
 		$this->assertEquals(4, $this->object->abc('aa'));
+	}
+
+	public function testMockArgs()
+	{
+		$mock = Mockista\mock(array("x"=>11, "y"=>function($a){return $a * 2;}));
+		$mock->freeze();
+		$this->assertEquals(11, $mock->x);
+		$this->assertEquals(4, $mock->y(2));
 	}
 }

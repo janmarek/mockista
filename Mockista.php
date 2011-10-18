@@ -2,21 +2,55 @@
 
 namespace Mockista;
 
-function mock()
+function mock($defaults = array())
 {
-	return new Mock();
+	$mock = new Mock();
+	foreach ($defaults as $key=>$default) {
+		if ($default instanceof \Closure) {
+			$mock->$key()->andCallback($default);
+		} else {
+			$mock->$key = $default;
+		}
+	}
+	Mock::$__instances[] = $mock;
+	return $mock;
 }
 
-class MockException extends \Exception
-{
-	const CODE_EXACTLY = 1;
-	const CODE_AT_LEAST = 2;
-	const CODE_NO_MORE_THAN = 3;
-	const CODE_INVALID_ARGS = 4;
+if (class_exists("\PHPUnit_Framework_AssertionFailedError")) {
+	class MockException extends \PHPUnit_Framework_AssertionFailedError
+	{
+		const CODE_EXACTLY = 1;
+		const CODE_AT_LEAST = 2;
+		const CODE_NO_MORE_THAN = 3;
+		const CODE_INVALID_ARGS = 4;
+	}
+} else {
+	class MockException extends \Exception
+	{
+		const CODE_EXACTLY = 1;
+		const CODE_AT_LEAST = 2;
+		const CODE_NO_MORE_THAN = 3;
+		const CODE_INVALID_ARGS = 4;
+	}
 }
+
+if (class_exists("\PHPUnit_Framework_TestListener")) {
+	class MockistaListener extends \PHPUnit_Framework_TestListener
+	{
+		public function endTest()
+		{
+			foreach(Mock::$__instances as $instance) {
+				$instance->collect();
+			}
+		}
+	}
+	$listener = new MockistaListener;
+}
+
 
 class Mock implements MockInterface
 {
+	public static $__instances = array();
 	const MODE_LEARNING = 1;
 	const MODE_COLLECTING = 2;
 	private $__mode = self::MODE_LEARNING;
