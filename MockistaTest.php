@@ -126,6 +126,19 @@ class MockistaTest extends PHPUnit_Framework_TestCase
 		$this->object->assertExpectations();
 	}
 
+
+	/**
+	 * @expectedException Exception
+	 * @expectedExceptionCode 3
+	 */
+	public function testCollectNoMoreThanOnceAttribute()
+	{
+		$this->object->abc()->noMoreThanOnce;
+		$this->object->freeze()->abc();
+		$this->object->abc();
+		$this->object->assertExpectations();
+	}
+
 	/**
 	 * @expectedException Exception
 	 * @expectedExceptionCode 3
