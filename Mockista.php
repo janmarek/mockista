@@ -95,7 +95,8 @@ class Mock implements MockInterface
 		} else if (isset($this->__methods[$name][0])) {
 			return 0;
 		} else {
-			throw new Exception("Invalid args", MockException::CODE_INVALID_ARGS);
+			$argsStr = var_export($args, true);
+			throw new MockException("Unexpected call in method: $name args: $argsStr", MockException::CODE_INVALID_ARGS);
 		}
 	}
 
@@ -111,7 +112,7 @@ class Mock implements MockInterface
 		$hash = $this->hashArgs($args);
 		$this->checkMethodsNamespace($name);
 		if (self::MODE_LEARNING == $this->__mode) {
-			$this->__methods[$name][$hash] = new MockMethod($args);
+			$this->__methods[$name][$hash] = new MockMethod($name, $args);
 			return $this->__methods[$name][$hash];
 		} else if (self::MODE_COLLECTING == $this->__mode) {
 			$useHash = $this->useHash($name, $args, $hash);
@@ -139,10 +140,13 @@ class MockMethod implements MethodInterface
 	private $invokeStrategy;
 	private $invokeValue;
 
+	private $name = '';
+
 	private $callCountReal = 0;
 
-	public function __construct($args)
+	public function __construct($name, $args)
 	{
+		$this->name = $name;
 		$this->args = $args;
 	}
 
@@ -155,19 +159,19 @@ class MockMethod implements MethodInterface
 		switch ($this->callType) {
 			case self::CALL_TYPE_EXACTLY:
 				$passed = $this->callCount == $this->callCountReal;
-				$message = "Expected {$this->callCount} and called {$this->callCountReal}";
+				$message = "Expected {$this->name} {$this->callCount} and called {$this->callCountReal}";
 				$code = MockException::CODE_EXACTLY;
 				break;
 
 			case self::CALL_TYPE_AT_LEAST:
 				$passed = $this->callCount <= $this->callCountReal;
-				$message = "Expected at least {$this->callCount} and called {$this->callCountReal}";
+				$message = "Expected {$this->name} at least {$this->callCount} and called {$this->callCountReal}";
 				$code = MockException::CODE_AT_LEAST;
 				break;
 
 			case self::CALL_TYPE_NO_MORE_THAN:
 				$passed = $this->callCount >= $this->callCountReal;
-				$message = "Expected no more than {$this->callCount} and called {$this->callCountReal}";
+				$message = "Expected {$this->name} no more than {$this->callCount} and called {$this->callCountReal}";
 				$code = MockException::CODE_NO_MORE_THAN;
 				break;
 			
