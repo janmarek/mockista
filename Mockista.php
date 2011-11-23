@@ -9,7 +9,7 @@ function mock($defaults = array())
 
 class MockFactory
 {
-	static function create($defaults)
+	static function create($defaults = array())
 	{
 		$mock = new Mock();
 		foreach ($defaults as $key=>$default) {
