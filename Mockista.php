@@ -190,7 +190,7 @@ class Mock implements MethodInterface
 			
 			default:
 				$this->callCountReal++;
-				return $this;
+				return $this->__methods[$this->name][$this->hashArgs($args)];
 				break;
 		}
 	}
