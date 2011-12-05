@@ -43,14 +43,6 @@ if (class_exists("\PHPUnit_Framework_AssertionFailedError")) {
 
 class Mock extends MockObject implements MockInterface
 {
-	protected $__mode = self::MODE_LEARNING;
-
-	public function freeze()
-	{
-		$this->__mode = self::MODE_COLLECTING;
-		return $this;
-	}
-
 
 	public function __call($name, $args)
 	{
@@ -71,7 +63,21 @@ class MockObject
 	const MODE_LEARNING = 1;
 	const MODE_COLLECTING = 2;
 
-	protected $__metods = array();
+	protected $__mode = self::MODE_LEARNING;
+
+	protected $__methods = array();
+
+	public function freeze()
+	{
+		$this->__mode = self::MODE_COLLECTING;
+		foreach ($this->__methods as $key1) {
+			foreach($key1 as $key2=>$mockObject) {
+				$mockObject->freeze();
+			}
+		}
+		return $this;
+	}
+
 
 	public function assertExpectations()
 	{
@@ -112,7 +118,7 @@ class MockObject
 }
 
 
-class MockMethod extends MockObject implements MethodInterface
+class MockMethod extends Mock implements MethodInterface
 {
 	const CALL_TYPE_EXACTLY = 1;
 	const CALL_TYPE_AT_LEAST = 2;
@@ -139,10 +145,6 @@ class MockMethod extends MockObject implements MethodInterface
 	{
 		$this->name = $name;
 		$this->args = $args;
-	}
-
-	public function __call($name, $args)
-	{
 	}
 
 	public function assertExpectations()
