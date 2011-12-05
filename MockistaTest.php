@@ -172,4 +172,13 @@ class MockistaTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(11, $mock->x);
 		$this->assertEquals(4, $mock->y(2));
 	}
+
+	public function testMockMethodChain()
+	{
+		$mock = Mockista\mock();
+		$a = $mock->a();
+		$this->assertTrue($a instanceof Mockista\MockMethod);
+		//$b = $a->b();
+		//$this->assertTrue($b instanceof Mockista\MockMethod);
+	}
 }

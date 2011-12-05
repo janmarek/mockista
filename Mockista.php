@@ -55,14 +55,10 @@ if (class_exists("\PHPUnit_Framework_TestListener")) {
 	$listener = new MockistaListener;
 }
 
-
-class Mock implements MockInterface
+class Mock extends MockObject implements MockInterface
 {
 	public static $__instances = array();
-	const MODE_LEARNING = 1;
-	const MODE_COLLECTING = 2;
 	private $__mode = self::MODE_LEARNING;
-	private $__methods = array();
 
 	public function freeze()
 	{
@@ -70,42 +66,6 @@ class Mock implements MockInterface
 		return $this;
 	}
 
-	public function assertExpectations()
-	{
-		foreach ($this->__methods as $method) {
-			foreach ($method as $argCombinationMethod) {
-				$argCombinationMethod->assertExpectations();
-			}
-		}
-	}
-
-	private function hashArgs($args)
-	{
-		if (array() == $args) {
-			return 0;
-		} else {
-		       return md5(serialize($args));
-		}
-	}
-
-	private function useHash($name, $args, $hash)
-	{
-		if ($hash !== 0 && isset($this->__methods[$name][$hash])) {
-			return $hash;
-		} else if (isset($this->__methods[$name][0])) {
-			return 0;
-		} else {
-			$argsStr = var_export($args, true);
-			throw new MockException("Unexpected call in method: $name args: $argsStr", MockException::CODE_INVALID_ARGS);
-		}
-	}
-
-	private function checkMethodsNamespace($name)
-	{
-		if (! isset($this->__methods[$name])) {
-			$this->__methods[$name] = array();
-		}
-	}
 
 	public function __call($name, $args)
 	{
@@ -121,8 +81,53 @@ class Mock implements MockInterface
 	}
 }
 
+class MockObject
+{
+	const MODE_LEARNING = 1;
+	const MODE_COLLECTING = 2;
 
-class MockMethod implements MethodInterface
+	protected $__metods = array();
+
+	public function assertExpectations()
+	{
+		foreach ($this->__methods as $method) {
+			foreach ($method as $argCombinationMethod) {
+				$argCombinationMethod->assertExpectations();
+			}
+		}
+	}
+
+	protected function hashArgs($args)
+	{
+		if (array() == $args) {
+			return 0;
+		} else {
+		       return md5(serialize($args));
+		}
+	}
+
+	protected function useHash($name, $args, $hash)
+	{
+		if ($hash !== 0 && isset($this->__methods[$name][$hash])) {
+			return $hash;
+		} else if (isset($this->__methods[$name][0])) {
+			return 0;
+		} else {
+			$argsStr = var_export($args, true);
+			throw new MockException("Unexpected call in method: $name args: $argsStr", MockException::CODE_INVALID_ARGS);
+		}
+	}
+
+	protected function checkMethodsNamespace($name)
+	{
+		if (! isset($this->__methods[$name])) {
+			$this->__methods[$name] = array();
+		}
+	}
+}
+
+
+class MockMethod extends MockObject implements MethodInterface
 {
 	const CALL_TYPE_EXACTLY = 1;
 	const CALL_TYPE_AT_LEAST = 2;
@@ -144,10 +149,15 @@ class MockMethod implements MethodInterface
 
 	private $callCountReal = 0;
 
+
 	public function __construct($name, $args)
 	{
 		$this->name = $name;
 		$this->args = $args;
+	}
+
+	public function __call($name, $args)
+	{
 	}
 
 	public function assertExpectations()
