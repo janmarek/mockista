@@ -19,7 +19,6 @@ class MockFactory
 				$mock->$key = $default;
 			}
 		}
-		Mock::$__instances[] = $mock;
 		return $mock;
 	}
 }
@@ -42,23 +41,9 @@ if (class_exists("\PHPUnit_Framework_AssertionFailedError")) {
 	}
 }
 
-if (class_exists("\PHPUnit_Framework_TestListener")) {
-	class MockistaListener extends \PHPUnit_Framework_TestListener
-	{
-		public function endTest()
-		{
-			foreach(Mock::$__instances as $instance) {
-				$instance->collect();
-			}
-		}
-	}
-	$listener = new MockistaListener;
-}
-
 class Mock extends MockObject implements MockInterface
 {
-	public static $__instances = array();
-	private $__mode = self::MODE_LEARNING;
+	protected $__mode = self::MODE_LEARNING;
 
 	public function freeze()
 	{
