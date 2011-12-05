@@ -41,31 +41,34 @@ if (class_exists("\PHPUnit_Framework_AssertionFailedError")) {
 	}
 }
 
-class Mock extends MockObject implements MockInterface
-{
-
-	public function __call($name, $args)
-	{
-		$hash = $this->hashArgs($args);
-		$this->checkMethodsNamespace($name);
-		if (self::MODE_LEARNING == $this->__mode) {
-			$this->__methods[$name][$hash] = new MockMethod($name, $args);
-			return $this->__methods[$name][$hash];
-		} else if (self::MODE_COLLECTING == $this->__mode) {
-			$useHash = $this->useHash($name, $args, $hash);
-			return $this->__methods[$name][$useHash]->invoke($args);
-		}
-	}
-}
-
-class MockObject
+class Mock implements MethodInterface
 {
 	const MODE_LEARNING = 1;
 	const MODE_COLLECTING = 2;
 
+	const CALL_TYPE_EXACTLY = 1;
+	const CALL_TYPE_AT_LEAST = 2;
+	const CALL_TYPE_NO_MORE_THAN = 3;
+
+	const INVOKE_STRATEGY_RETURN = 1;
+	const INVOKE_STRATEGY_THROW = 2;
+	const INVOKE_STRATEGY_CALLBACK = 3;
+
 	protected $__mode = self::MODE_LEARNING;
 
 	protected $__methods = array();
+	
+	private $args;
+
+	private $callType;
+	private $callCount;
+
+	private $invokeStrategy;
+	private $invokeValue;
+
+	private $name = '';
+
+	private $callCountReal = 0;
 
 	public function freeze()
 	{
@@ -81,6 +84,7 @@ class MockObject
 
 	public function assertExpectations()
 	{
+		$this->assertExpectationsOnMyself();
 		foreach ($this->__methods as $method) {
 			foreach ($method as $argCombinationMethod) {
 				$argCombinationMethod->assertExpectations();
@@ -115,39 +119,27 @@ class MockObject
 			$this->__methods[$name] = array();
 		}
 	}
-}
 
-
-class MockMethod extends Mock implements MethodInterface
-{
-	const CALL_TYPE_EXACTLY = 1;
-	const CALL_TYPE_AT_LEAST = 2;
-	const CALL_TYPE_NO_MORE_THAN = 3;
-
-	const INVOKE_STRATEGY_RETURN = 1;
-	const INVOKE_STRATEGY_THROW = 2;
-	const INVOKE_STRATEGY_CALLBACK = 3;
-
-	private $args;
-
-	private $callType;
-	private $callCount;
-
-	private $invokeStrategy;
-	private $invokeValue;
-
-	private $name = '';
-
-	private $callCountReal = 0;
-
-
-	public function __construct($name, $args)
+	public function __construct($name = "", $args = array())
 	{
 		$this->name = $name;
 		$this->args = $args;
 	}
 
-	public function assertExpectations()
+	public function __call($name, $args)
+	{
+		$hash = $this->hashArgs($args);
+		$this->checkMethodsNamespace($name);
+		if (self::MODE_LEARNING == $this->__mode) {
+			$this->__methods[$name][$hash] = new Mock($name, $args);
+			return $this->__methods[$name][$hash];
+		} else if (self::MODE_COLLECTING == $this->__mode) {
+			$useHash = $this->useHash($name, $args, $hash);
+			return $this->__methods[$name][$useHash]->invoke($args);
+		}
+	}
+
+	public function assertExpectationsOnMyself()
 	{
 		$passed = true;
 		$message = "";
@@ -198,7 +190,7 @@ class MockMethod extends Mock implements MethodInterface
 			
 			default:
 				$this->callCountReal++;
-				return;
+				return $this;
 				break;
 		}
 	}
