@@ -41,6 +41,30 @@ if (class_exists("\PHPUnit_Framework_AssertionFailedError")) {
 	}
 }
 
+class MockChain
+{
+
+	private $lastCalledMethods = array();
+
+	function addLastCalledMethod($method, $mock)
+	{
+		$this->lastCalledMethods[$method] = $mock;
+		return $this;
+	}
+
+	function __call($name, $args) {
+		if (array_key_exists($name, $this->lastCalledMethods)) {
+			return call_user_func_array(array($this->lastCalledMethods[$name], $name), $args);
+		} else {
+			return $this;
+		}
+	}
+
+	function __get($name) {
+		return $this;
+	}
+}
+
 class Mock implements MethodInterface
 {
 	const MODE_LEARNING = 1;
@@ -57,7 +81,7 @@ class Mock implements MethodInterface
 	protected $__mode = self::MODE_LEARNING;
 
 	protected $__methods = array();
-	
+
 	private $args;
 
 	private $callType;
@@ -97,7 +121,7 @@ class Mock implements MethodInterface
 		if (array() == $args) {
 			return 0;
 		} else {
-		       return md5(serialize($args));
+			return md5(serialize($args));
 		}
 	}
 
@@ -146,52 +170,54 @@ class Mock implements MethodInterface
 		$code = 0;
 
 		switch ($this->callType) {
-			case self::CALL_TYPE_EXACTLY:
-				$passed = $this->callCount == $this->callCountReal;
-				$message = "Expected {$this->name} {$this->callCount} and called {$this->callCountReal}";
-				$code = MockException::CODE_EXACTLY;
-				break;
+		case self::CALL_TYPE_EXACTLY:
+			$passed = $this->callCount == $this->callCountReal;
+			$message = "Expected {$this->name} {$this->callCount} and called {$this->callCountReal}";
+			$code = MockException::CODE_EXACTLY;
+			break;
 
-			case self::CALL_TYPE_AT_LEAST:
-				$passed = $this->callCount <= $this->callCountReal;
-				$message = "Expected {$this->name} at least {$this->callCount} and called {$this->callCountReal}";
-				$code = MockException::CODE_AT_LEAST;
-				break;
+		case self::CALL_TYPE_AT_LEAST:
+			$passed = $this->callCount <= $this->callCountReal;
+			$message = "Expected {$this->name} at least {$this->callCount} and called {$this->callCountReal}";
+			$code = MockException::CODE_AT_LEAST;
+			break;
 
-			case self::CALL_TYPE_NO_MORE_THAN:
-				$passed = $this->callCount >= $this->callCountReal;
-				$message = "Expected {$this->name} no more than {$this->callCount} and called {$this->callCountReal}";
-				$code = MockException::CODE_NO_MORE_THAN;
-				break;
-			
-			default:
-				break;
+		case self::CALL_TYPE_NO_MORE_THAN:
+			$passed = $this->callCount >= $this->callCountReal;
+			$message = "Expected {$this->name} no more than {$this->callCount} and called {$this->callCountReal}";
+			$code = MockException::CODE_NO_MORE_THAN;
+			break;
+
+		default:
+			break;
 		}
 
 		if (! $passed) {
 			throw new MockException($message, $code);
 		}
 	}
-	
+
 	public function invoke($args)
 	{
 		switch ($this->invokeStrategy) {
-			case self::INVOKE_STRATEGY_RETURN:
-				$this->callCountReal++;
-				return $this->invokeValue;
-				break;
-			case self::INVOKE_STRATEGY_THROW:
-				$this->callCountReal++;
-				throw $this->invokeValue;
-				break;
-			case self::INVOKE_STRATEGY_CALLBACK:
-				$this->callCountReal++;
-				return call_user_func_array($this->invokeValue, $args);
-			
-			default:
-				$this->callCountReal++;
+		case self::INVOKE_STRATEGY_RETURN:
+			$this->callCountReal++;
+			return $this->invokeValue;
+			break;
+		case self::INVOKE_STRATEGY_THROW:
+			$this->callCountReal++;
+			throw $this->invokeValue;
+			break;
+		case self::INVOKE_STRATEGY_CALLBACK:
+			$this->callCountReal++;
+			return call_user_func_array($this->invokeValue, $args);
+
+		default:
+			$this->callCountReal++;
+			if (isset($this->__methods[$this->name][$this->hashArgs($args)])) {
 				return $this->__methods[$this->name][$this->hashArgs($args)];
-				break;
+			}
+			break;
 		}
 	}
 
@@ -201,28 +227,28 @@ class Mock implements MethodInterface
 		$this->callCount = 1;
 		return $this;
 	}
-	
+
 	public function twice()
 	{
 		$this->callType = self::CALL_TYPE_EXACTLY;
 		$this->callCount = 2;
 		return $this;
 	}
-	
+
 	public function never()
 	{
 		$this->callType = self::CALL_TYPE_EXACTLY;
 		$this->callCount = 0;
 		return $this;
 	}
-	
+
 	public function exactly($count)
 	{
 		$this->callType = self::CALL_TYPE_EXACTLY;
 		$this->callCount = $count;
 		return $this;
 	}
-	
+
 
 	public function atLeastOnce()
 	{

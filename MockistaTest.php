@@ -187,3 +187,25 @@ class MockistaTest extends PHPUnit_Framework_TestCase
 		//$this->assertEquals(12, $mock->a('b')->c('b'));
 	}
 }
+
+class MockChainTest extends KDev_Test
+{
+	function prepare()
+	{
+		$this->object = new MockChain;
+	}
+
+	function mockD()
+	{
+		$mock = Mockista\mock();
+		$mock->d(11)->andReturn(true);
+		return $mock;
+	}
+
+	function testAddLastCalledMethod()
+	{
+		$this->object->addLastCalledMethod("d", $this->mockD);
+		$ret = $this->object->a->b()->c("abc")->d(11);
+		$this->assertTrue($ret);
+	}
+}
