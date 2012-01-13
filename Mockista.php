@@ -121,7 +121,11 @@ class Mock implements MethodInterface
 		if (array() == $args) {
 			return 0;
 		} else {
-			return md5(serialize($args));
+			try {
+				return md5(serialize($args));
+			} catch (\Exception $e) {
+				return md5(serialize(var_export($args, TRUE)));
+			}
 		}
 	}
 
