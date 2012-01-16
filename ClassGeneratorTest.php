@@ -15,6 +15,11 @@ class ClassGeneratorTest_Method
 	}
 }
 
+interface ClassGeneratorTest_Interface
+{
+	function ai(Array $ax = array(1, 2, 3));
+}
+
 class ClassGeneratorTest extends KDev_Test
 {
 	function prepare()
@@ -67,5 +72,27 @@ class ClassGeneratorTest_Method_Generated extends ClassGeneratorTest_Method
 		$this->object->setMethodFinder(new Mockista\MethodFinder);
 		$this->assertEquals($classIncludingMethod, $this->object->generate("ClassGeneratorTest_Method", "ClassGeneratorTest_Method_Generated"));
 
+	}
+
+	function testInterface()
+	{
+		$interfaceBasedClass = '<?php
+class ClassGeneratorTest_Interface_Generated implements ClassGeneratorTest_Interface
+{
+	public $mockista;
+
+	function __call($name, $args)
+	{
+		return call_user_func_array(array($this->mockista, $name), $args);
+	}
+
+	function ai(Array $ax = array (  0 => 1,  1 => 2,  2 => 3,))
+	{
+		return call_user_func_array(array($this->mockista, \'ai\'), func_get_args());
+	}
+}
+';
+		$this->object->setMethodFinder(new Mockista\MethodFinder);
+		$this->assertEquals($interfaceBasedClass, $this->object->generate("ClassGeneratorTest_Interface", "ClassGeneratorTest_Interface_Generated"));
 	}
 }

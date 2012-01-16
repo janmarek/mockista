@@ -338,9 +338,11 @@ class MethodFinder
 		$out = array();
 		foreach ($parameters as $parameter) {
 			$parameterDesc = array(
-				'default'=>$parameter->isOptional() ? $parameter->getDefaultValue() : null,
 				'name'=>$parameter->getName(),
 			);
+			if ($parameter->isOptional()) {
+				$parameterDesc['default'] = $parameter->getDefaultValue();
+			}
 			if ($parameter->isArray()) {
 				$parameterDesc['typehint'] = 'Array';
 			} else {
@@ -418,11 +420,18 @@ class ClassGenerator
 			}
 
 			$outArr .= '$' . $param['name'];
-			if ($param['default']) {
-				$outArr .= ' = ' . var_export($param['default'], true);
+			if (array_key_exists('default', $param)) {
+				$outArr .= ' = ' . $this->removeNewLines(
+					var_export($param['default'], true)
+				);
 			}
 			$out[] = $outArr;
 		}
 		return join(', ', $out);
+	}
+
+	private function removeNewLines($str)
+	{
+		return str_replace("\n", "", $str);
 	}
 }
