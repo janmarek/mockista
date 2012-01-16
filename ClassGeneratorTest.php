@@ -35,6 +35,11 @@ class ClassGeneratorTest extends KDev_Test
 class ClassGeneratorTest_Empty_Generated extends ClassGeneratorTest_Empty
 {
 	public $mockista;
+
+	function __call($name, $args)
+	{
+		return call_user_func_array(array($this->mockista, $name), $args);
+	}
 }
 ';
 		$this->object->setMethodFinder($this->mockNoMethods);
@@ -48,6 +53,11 @@ class ClassGeneratorTest_Method_Generated extends ClassGeneratorTest_Method
 {
 	public $mockista;
 
+	function __call($name, $args)
+	{
+		return call_user_func_array(array($this->mockista, $name), $args);
+	}
+
 	function abc($a, $def = 123, $ghi = \'a\')
 	{
 		return call_user_func_array(array($this->mockista, \'abc\'), func_get_args());
@@ -56,5 +66,6 @@ class ClassGeneratorTest_Method_Generated extends ClassGeneratorTest_Method
 ';
 		$this->object->setMethodFinder(new Mockista\MethodFinder);
 		$this->assertEquals($classIncludingMethod, $this->object->generate("ClassGeneratorTest_Method", "ClassGeneratorTest_Method_Generated"));
+
 	}
 }

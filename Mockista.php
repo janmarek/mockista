@@ -371,6 +371,12 @@ class ClassGenerator
 		$methods = $this->methodFinder->methods($inheritedClass);
 
 		$out = "<?php\nclass $className $extends $inheritedClass\n{\n	public \$mockista;\n";
+		$out .= '
+	function __call($name, $args)
+	{
+		return call_user_func_array(array($this->mockista, $name), $args);
+	}
+';
 		foreach ($methods as $name => $method) {
 			$out .= $this->generateMethod($name, $method);
 		}
