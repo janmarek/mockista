@@ -319,18 +319,17 @@ class MethodFinder
 		$class = new \ReflectionClass($class);
 		$out = array();
 		foreach ($class->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
-			$out[$method->name] = $this->getMethodDescription($method);
+			$out[$method->getName()] = $this->getMethodDescription($method);
 		}
 		return $out;
 	}
 
 	function getMethodDescription($method)
 	{
-		$out = array(
+		return array(
 			'parameters'=>$this->getParameters($method),
 			'static'=>$method->isStatic(),
 		);
-		return $out;
 	}
 
 	function getParameters($method)
@@ -339,7 +338,7 @@ class MethodFinder
 		$out = array();
 		foreach ($parameters as $parameter) {
 			$parameterDesc = array(
-				'default'=>$parameter->getDefaultValue(),
+				'default'=>$parameter->isOptional() ? $parameter->getDefaultValue() : null,
 				'name'=>$parameter->getName(),
 			);
 			if ($parameter->isArray()) {
@@ -372,6 +371,9 @@ class ClassGenerator
 		$methods = $this->methodFinder->methods($inheritedClass);
 
 		$out = "<?php\nclass $className $extends $inheritedClass\n{\n	public \$mockista;\n";
+		foreach ($methods as $name => $method) {
+			$out .= $this->generateMethod($name, $method);
+		}
 		$out .= "}\n";
 		return $out;
 	}
@@ -383,5 +385,38 @@ class ClassGenerator
 		} else {
 			return $newName;
 		}
+	}
+
+	private function generateMethod($methodName, $method)
+	{
+		$params = $this->generateParams($method['parameters']);
+		$static = $method['static'] ? 'static ' : '';
+		$out = "
+	{$static}function $methodName($params)
+	{
+		return call_user_func_array(array(\$this->mockista, '$methodName'), func_get_args());
+	}
+";
+		return $out;
+	}
+
+	private function generateParams($params)
+	{
+		$out = array();
+		foreach ($params as $param) {
+
+			if ($param['typehint']) {
+				$outArr = $param['typehint'] . ' ';
+			} else {
+				$outArr = '';
+			}
+
+			$outArr .= '$' . $param['name'];
+			if ($param['default']) {
+				$outArr .= ' = ' . var_export($param['default'], true);
+			}
+			$out[] = $outArr;
+		}
+		return join(', ', $out);
 	}
 }

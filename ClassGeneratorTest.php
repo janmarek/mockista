@@ -8,6 +8,13 @@ class ClassGeneratorTest_Empty
 {
 }
 
+class ClassGeneratorTest_Method
+{
+	function abc($a, $def = 123, $ghi = 'a')
+	{
+	}
+}
+
 class ClassGeneratorTest extends KDev_Test
 {
 	function prepare()
@@ -36,16 +43,18 @@ class ClassGeneratorTest_Empty_Generated extends ClassGeneratorTest_Empty
 
 	function testMethod()
 	{
-		$this->markTestIncomplete();
 		$classIncludingMethod = '<?php
 class ClassGeneratorTest_Method_Generated extends ClassGeneratorTest_Method
 {
 	public $mockista;
 
-	function abc($def = 123)
+	function abc($a, $def = 123, $ghi = \'a\')
 	{
+		return call_user_func_array(array($this->mockista, \'abc\'), func_get_args());
 	}
 }
 ';
+		$this->object->setMethodFinder(new Mockista\MethodFinder);
+		$this->assertEquals($classIncludingMethod, $this->object->generate("ClassGeneratorTest_Method", "ClassGeneratorTest_Method_Generated"));
 	}
 }

@@ -14,7 +14,7 @@ interface MethodFinderTest_Dummy1234If1
 
 class MethodFinderTest_Dummy1234Parent implements MethodFinderTest_Dummy1234If1
 {
-	function a()
+	function ab()
 	{
 	}
 
@@ -42,10 +42,10 @@ class MethodFinderTest extends KDev_Test
 	function testMethodAStaticNotStatic()
 	{
 		$methods = $this->object->methods("MethodFinderTest_Dummy1234");
-		$this->assertTrue(array_key_exists("a", $methods));
-		$this->assertTrue(array_key_exists("parameters", $methods['a']));
-		$this->assertEquals(0, sizeof($methods['a']['parameters']));
-		$this->assertFalse($methods['a']['static']);
+		$this->assertTrue(array_key_exists("ab", $methods));
+		$this->assertTrue(array_key_exists("parameters", $methods['ab']));
+		$this->assertEquals(0, sizeof($methods['ab']['parameters']));
+		$this->assertFalse($methods['ab']['static']);
 	}
 
 	function testMethodBNumberParams()
