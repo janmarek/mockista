@@ -4,14 +4,21 @@ use Mockista\MethodInterface;
 
 require_once __DIR__ . "/bootstrap.php";
 
-
-class MethodFinderTest_Dummy1234
+class MethodFinderTest_Dummy1234Parent
 {
 	function a()
 	{
 	}
 
+}
+
+class MethodFinderTest_Dummy1234 extends MethodFinderTest_Dummy1234Parent
+{
 	static function b(Array $c = array('a'))
+	{
+	}
+
+	function c(Exception $d = null)
 	{
 	}
 }
@@ -23,7 +30,7 @@ class MethodFinderTest extends KDev_Test
 		$this->object = new Mockista\MethodFinder;
 	}
 
-	function testMethodA()
+	function testMethodAStaticNotStatic()
 	{
 		$methods = $this->object->methods("MethodFinderTest_Dummy1234");
 		$this->assertTrue(array_key_exists("a", $methods));
@@ -32,10 +39,19 @@ class MethodFinderTest extends KDev_Test
 		$this->assertFalse($methods['a']['static']);
 	}
 
-	function testMethodB()
+	function testMethodBNumberParams()
 	{
 		$methods = $this->object->methods("MethodFinderTest_Dummy1234");
 		$this->assertEquals(1, sizeof($methods['b']['parameters']));
 		$this->assertTrue($methods['b']['static']);
+	}
+
+	function testDefaultParam()
+	{
+		$methods = $this->object->methods("MethodFinderTest_Dummy1234");
+		$this->assertEquals(array("a"), $methods['b']['parameters'][0]['default']);
+		$this->assertEquals('Array', $methods['b']['parameters'][0]['typehint']);
+
+		$this->assertEquals('Exception', $methods['c']['parameters'][0]['typehint']);
 	}
 }

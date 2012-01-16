@@ -327,9 +327,31 @@ class MethodFinder
 	function getMethodDescription($method)
 	{
 		$out = array(
-			'parameters'=>$method->getParameters(),
+			'parameters'=>$this->getParameters($method),
 			'static'=>$method->isStatic(),
 		);
+		return $out;
+	}
+
+	function getParameters($method)
+	{
+		$parameters = $method->getParameters();
+		$out = array();
+		foreach ($parameters as $parameter) {
+			$parameterDesc = array(
+				'default'=>$parameter->getDefaultValue(),
+				'name'=>$parameter->getName(),
+			);
+			if ($parameter->isArray()) {
+				$parameterDesc['typehint'] = 'Array';
+			} else {
+				$klass = $parameter->getClass();
+				if ($klass) {
+					$parameterDesc['typehint'] = $klass->getName();
+				}
+			}
+			$out[$parameter->getPosition()] = $parameterDesc;
+		}
 		return $out;
 	}
 }
