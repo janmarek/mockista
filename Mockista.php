@@ -355,3 +355,33 @@ class MethodFinder
 		return $out;
 	}
 }
+
+class ClassGenerator
+{
+	private $methodsFinder;
+
+	public function setMethodFinder($methodFinder)
+	{
+		return $this->methodFinder = $methodFinder;
+	}
+	
+	function generate($inheritedClass, $newName = null)
+	{
+		$className = $this->newClassName($newName, $inheritedClass);
+		$extends = class_exists($inheritedClass) ? "extends" : "implements";
+		$methods = $this->methodFinder->methods($inheritedClass);
+
+		$out = "<?php\nclass $className $extends $inheritedClass\n{\n";
+		$out .= "}\n";
+		return $out;
+	}
+
+	private function newClassName($newName, $inheritedClass)
+	{
+		if (null === $newName) {
+			return $inheritedClass . '_' . uniqid();
+		} else {
+			return $newName;
+		}
+	}
+}

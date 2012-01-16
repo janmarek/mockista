@@ -4,7 +4,15 @@ use Mockista\MethodInterface;
 
 require_once __DIR__ . "/bootstrap.php";
 
-class MethodFinderTest_Dummy1234Parent
+interface MethodFinderTest_Dummy1234If2
+{
+}
+
+interface MethodFinderTest_Dummy1234If1
+{
+}
+
+class MethodFinderTest_Dummy1234Parent implements MethodFinderTest_Dummy1234If1
 {
 	function a()
 	{
@@ -12,7 +20,7 @@ class MethodFinderTest_Dummy1234Parent
 
 }
 
-class MethodFinderTest_Dummy1234 extends MethodFinderTest_Dummy1234Parent
+class MethodFinderTest_Dummy1234 extends MethodFinderTest_Dummy1234Parent implements MethodFinderTest_Dummy1234If2
 {
 	static function b(Array $c = array('a'))
 	{
@@ -29,6 +37,7 @@ class MethodFinderTest extends KDev_Test
 	{
 		$this->object = new Mockista\MethodFinder;
 	}
+
 
 	function testMethodAStaticNotStatic()
 	{
