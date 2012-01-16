@@ -11,8 +11,17 @@ class MockFactory
 {
 	static function create()
 	{
-		$args = func_get_args();
+		list($class, $defaults) = self::parseArgs(func_get_args());
 
+		$mock = self::createMock($class);
+
+		$mock = self::fillDefaults($mock, $defaults);
+
+		return $mock;
+	}
+
+	private static function parseArgs($args)
+	{
 		$defaults = array();
 		$class = false;
 
@@ -26,7 +35,11 @@ class MockFactory
 			$class = $args[0];
 			$defaults = $args[1];
 		}
+		return array($class, $defaults);
+	}
 
+	private static function createMock($class)
+	{
 		if ($class) {
 			$classGenerator = new ClassGenerator;
 			$classGenerator->setMethodFinder(new MethodFinder);
@@ -40,6 +53,12 @@ class MockFactory
 			$mock = new Mock();
 		}
 
+		return $mock;
+	}
+
+	private static function fillDefaults($mock, $defaults)
+	{
+
 		foreach ($defaults as $key=>$default) {
 			if ($default instanceof \Closure) {
 				$mock->$key()->andCallback($default);
@@ -49,6 +68,7 @@ class MockFactory
 		}
 		return $mock;
 	}
+
 }
 
 if (class_exists("\PHPUnit_Framework_AssertionFailedError")) {
