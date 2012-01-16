@@ -371,7 +371,7 @@ class ClassGenerator
 		$extends = class_exists($inheritedClass) ? "extends" : "implements";
 		$methods = $this->methodFinder->methods($inheritedClass);
 
-		$out = "<?php\nclass $className $extends $inheritedClass\n{\n";
+		$out = "<?php\nclass $className $extends $inheritedClass\n{\n	public \$mockista;\n";
 		$out .= "}\n";
 		return $out;
 	}

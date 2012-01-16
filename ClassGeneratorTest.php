@@ -24,12 +24,28 @@ class ClassGeneratorTest extends KDev_Test
 
 	function testEmptyClass()
 	{
-		$emptyClass = "<?php
+		$emptyClass = '<?php
 class ClassGeneratorTest_Empty_Generated extends ClassGeneratorTest_Empty
 {
+	public $mockista;
 }
-";
+';
 		$this->object->setMethodFinder($this->mockNoMethods);
 		$this->assertEquals($emptyClass, $this->object->generate("ClassGeneratorTest_Empty", "ClassGeneratorTest_Empty_Generated"));
+	}
+
+	function testMethod()
+	{
+		$this->markTestIncomplete();
+		$classIncludingMethod = '<?php
+class ClassGeneratorTest_Method_Generated extends ClassGeneratorTest_Method
+{
+	public $mockista;
+
+	function abc($def = 123)
+	{
+	}
+}
+';
 	}
 }
