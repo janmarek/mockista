@@ -310,3 +310,26 @@ class Mock implements MethodInterface
 	}
 
 }
+
+
+class MethodFinder
+{
+	function methods($class)
+	{
+		$class = new \ReflectionClass($class);
+		$out = array();
+		foreach ($class->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+			$out[$method->name] = $this->getMethodDescription($method);
+		}
+		return $out;
+	}
+
+	function getMethodDescription($method)
+	{
+		$out = array(
+			'parameters'=>$method->getParameters(),
+			'static'=>$method->isStatic(),
+		);
+		return $out;
+	}
+}
