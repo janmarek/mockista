@@ -2,16 +2,44 @@
 
 namespace Mockista;
 
-function mock($defaults = array())
+function mock()
 {
-	return MockFactory::create($defaults);
+	return call_user_func_array(array("Mockista\MockFactory", "create"), func_get_args());
 }
 
 class MockFactory
 {
-	static function create($defaults = array())
+	static function create()
 	{
-		$mock = new Mock();
+		$args = func_get_args();
+
+		$defaults = array();
+		$class = false;
+
+		if (1 == sizeof($args)) {
+			if (is_array($args[0])) {
+				$defaults = $args[0];
+			} else {
+				$class = $args[0];
+			}
+		} else if (2 == sizeof($args)) {
+			$class = $args[0];
+			$defaults = $args[1];
+		}
+
+		if ($class) {
+			$classGenerator = new ClassGenerator;
+			$classGenerator->setMethodFinder(new MethodFinder);
+			
+			$newName = $class . '_' . uniqid();
+			$code = $classGenerator->generate($class, $newName);
+			eval($code);
+			$mock = new $newName;
+			$mock->mockista = new Mock();
+		} else {
+			$mock = new Mock();
+		}
+
 		foreach ($defaults as $key=>$default) {
 			if ($default instanceof \Closure) {
 				$mock->$key()->andCallback($default);
@@ -366,13 +394,12 @@ class ClassGenerator
 		return $this->methodFinder = $methodFinder;
 	}
 	
-	function generate($inheritedClass, $newName = null)
+	function generate($inheritedClass, $newName)
 	{
-		$className = $this->newClassName($newName, $inheritedClass);
 		$extends = class_exists($inheritedClass) ? "extends" : "implements";
 		$methods = $this->methodFinder->methods($inheritedClass);
 
-		$out = "<?php\nclass $className $extends $inheritedClass\n{\n	public \$mockista;\n";
+		$out = "class $newName $extends $inheritedClass\n{\n	public \$mockista;\n";
 		$out .= '
 	function __call($name, $args)
 	{
@@ -384,15 +411,6 @@ class ClassGenerator
 		}
 		$out .= "}\n";
 		return $out;
-	}
-
-	private function newClassName($newName, $inheritedClass)
-	{
-		if (null === $newName) {
-			return $inheritedClass . '_' . uniqid();
-		} else {
-			return $newName;
-		}
 	}
 
 	private function generateMethod($methodName, $method)

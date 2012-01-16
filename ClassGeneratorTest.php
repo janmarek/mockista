@@ -36,8 +36,7 @@ class ClassGeneratorTest extends KDev_Test
 
 	function testEmptyClass()
 	{
-		$emptyClass = '<?php
-class ClassGeneratorTest_Empty_Generated extends ClassGeneratorTest_Empty
+		$emptyClass = 'class ClassGeneratorTest_Empty_Generated extends ClassGeneratorTest_Empty
 {
 	public $mockista;
 
@@ -53,8 +52,7 @@ class ClassGeneratorTest_Empty_Generated extends ClassGeneratorTest_Empty
 
 	function testMethod()
 	{
-		$classIncludingMethod = '<?php
-class ClassGeneratorTest_Method_Generated extends ClassGeneratorTest_Method
+		$classIncludingMethod = 'class ClassGeneratorTest_Method_Generated extends ClassGeneratorTest_Method
 {
 	public $mockista;
 
@@ -76,8 +74,7 @@ class ClassGeneratorTest_Method_Generated extends ClassGeneratorTest_Method
 
 	function testInterface()
 	{
-		$interfaceBasedClass = '<?php
-class ClassGeneratorTest_Interface_Generated implements ClassGeneratorTest_Interface
+		$interfaceBasedClass = 'class ClassGeneratorTest_Interface_Generated implements ClassGeneratorTest_Interface
 {
 	public $mockista;
 
