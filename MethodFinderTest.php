@@ -17,7 +17,6 @@ class MethodFinderTest_Dummy1234Parent implements MethodFinderTest_Dummy1234If1
 	function ab()
 	{
 	}
-
 }
 
 class MethodFinderTest_Dummy1234 extends MethodFinderTest_Dummy1234Parent implements MethodFinderTest_Dummy1234If2
