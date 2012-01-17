@@ -44,7 +44,7 @@ class MockFactory
 			$classGenerator = new ClassGenerator;
 			$classGenerator->setMethodFinder(new MethodFinder);
 			
-			$newName = $class . '_' . uniqid();
+			$newName = str_replace("\\", "_", $class) . '_' . uniqid();
 			$code = $classGenerator->generate($class, $newName);
 			eval($code);
 			$mock = new $newName;
@@ -419,7 +419,12 @@ class ClassGenerator
 		$extends = class_exists($inheritedClass) ? "extends" : "implements";
 		$methods = $this->methodFinder->methods($inheritedClass);
 
-		$out = "class $newName $extends $inheritedClass\n{\n	public \$mockista;\n";
+		$out = "";
+		if ($this->containsNamespace($inheritedClass)) {
+			$out .= "use {$inheritedClass};\n\n";
+			$inheritedClass = $this->removeNameSpace($inheritedClass);
+		}
+		$out .= "class $newName $extends $inheritedClass\n{\n	public \$mockista;\n";
 		$out .= '
 	function __call($name, $args)
 	{
@@ -431,6 +436,16 @@ class ClassGenerator
 		}
 		$out .= "}\n";
 		return $out;
+	}
+
+	private function containsNamespace($str)
+	{
+		return false !== strpos($str, "\\");
+	}
+
+	private function removeNameSpace($str)
+	{
+		return substr($str, strrpos($str, "\\") + 1);
 	}
 
 	private function generateMethod($methodName, $method)

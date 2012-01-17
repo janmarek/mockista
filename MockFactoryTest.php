@@ -1,5 +1,7 @@
 <?php
 
+namespace Mockista\Test;
+
 use Mockista\MethodInterface;
 
 require_once __DIR__ . "/bootstrap.php";
@@ -17,17 +19,17 @@ class MockFactoryTest_Generated
 	}
 }
 
-class MockFactoryTest extends KDev_Test
+class MockFactoryTest extends \KDev_Test
 {
 	function testGenerateClass()
 	{
-		$obj = Mockista\mock("MockFactoryTest_Generated");
+		$obj = \Mockista\mock("Mockista\\Test\\MockFactoryTest_Generated");
 		$this->assertTrue($obj instanceof MockFactoryTest_Generated);
 	}
 
 	function mockMethods()
 	{
-		$obj = Mockista\mock("MockFactoryTest_Generated", array('x'=>1, 'y'=>function(){return 2;}));
+		$obj = \Mockista\mock("Mockista\\Test\\MockFactoryTest_Generated", array('x'=>1, 'y'=>function(){return 2;}));
 		return $obj;
 	}
 

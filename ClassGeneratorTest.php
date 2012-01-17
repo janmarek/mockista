@@ -50,6 +50,25 @@ class ClassGeneratorTest extends KDev_Test
 		$this->assertEquals($emptyClass, $this->object->generate("ClassGeneratorTest_Empty", "ClassGeneratorTest_Empty_Generated"));
 	}
 
+	function testNameSpace()
+	{
+		$emptyClassWithNamespace = 'use A\B\ClassGeneratorTest_Empty;
+
+class A_B_ClassGeneratorTest_Empty_Generated implements ClassGeneratorTest_Empty
+{
+	public $mockista;
+
+	function __call($name, $args)
+	{
+		return call_user_func_array(array($this->mockista, $name), $args);
+	}
+}
+';
+		$this->object->setMethodFinder($this->mockNoMethods);
+		$this->assertEquals($emptyClassWithNamespace, $this->object->generate("A\\B\\ClassGeneratorTest_Empty", "A_B_ClassGeneratorTest_Empty_Generated"));
+	
+	}
+
 	function testMethod()
 	{
 		$classIncludingMethod = 'class ClassGeneratorTest_Method_Generated extends ClassGeneratorTest_Method
