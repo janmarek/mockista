@@ -10,7 +10,7 @@ class MockChainTest extends KDev_Test
 {
 	function prepare()
 	{
-		$this->object = new MockChain;
+		$this->object = new Mockista\MockChain;
 	}
 
 	function mockD()
