@@ -69,7 +69,7 @@ class MockistaTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException Exception
+	 * @expectedException Mockista\MockException
 	 * @expectedExceptionCode 1
 	 */
 	public function testCollectNever()
@@ -89,7 +89,7 @@ class MockistaTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException Exception
+	 * @expectedException Mockista\MockException
 	 * @expectedExceptionCode 1
 	 */
 	public function testCollectExactlyBad()
@@ -108,7 +108,7 @@ class MockistaTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException Exception
+	 * @expectedException Mockista\MockException
 	 * @expectedExceptionCode 2
 	 */
 	public function testCollectAtLeastBad()
@@ -128,7 +128,7 @@ class MockistaTest extends PHPUnit_Framework_TestCase
 
 
 	/**
-	 * @expectedException Exception
+	 * @expectedException Mockista\MockException
 	 * @expectedExceptionCode 3
 	 */
 	public function testCollectNoMoreThanOnceAttribute()
@@ -140,7 +140,7 @@ class MockistaTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException Exception
+	 * @expectedException Mockista\MockException
 	 * @expectedExceptionCode 3
 	 */
 	public function testCollectNoMoreThanBad()
