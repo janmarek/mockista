@@ -1,7 +1,8 @@
 <?php
 
 namespace Mockista;
-require_once "PHPUnit/Framework/Assert/Functions.php";
+use PHPUnit_Framework_Assert;
+require_once "PHPUnit/Framework/Assert.php";
 
 function I_expect($value = null)
 {
@@ -37,13 +38,13 @@ class Expectation
 }
 
 Expectation::setCallback("isTrue", function ($self) {
-	assertTrue($self->value);
+	PHPUnit_Framework_Assert::assertTrue($self->value);
 });
 
 Expectation::setCallback("isFalse", function ($self) {
-	assertFalse($self->value);
+	PHPUnit_Framework_Assert::assertFalse($self->value);
 });
 
 Expectation::setCallback("isEqualTo", function ($self, $value) {
-	assertEquals($self->value, $value);
+	PHPUnit_Framework_Assert::assertEquals($self->value, $value);
 });
