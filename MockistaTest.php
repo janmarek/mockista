@@ -175,15 +175,15 @@ class MockistaTest extends PHPUnit_Framework_TestCase
 
 	public function testMockMethodChain()
 	{
-		//$mock = Mockista\mock();
-		//$mock->a()->b()->andReturn(11);
-		//$mock->a()->c('a')->andReturn(11);
-		//$mock->a('b')->c('b')->andReturn(12);
+		$mock = Mockista\mock();
+		$mock->a()->b()->andReturn(11);
+		$mock->a()->c('a')->andReturn(11);
+		$mock->a('b')->c('b')->andReturn(12);
 
-		//$mock->freeze();
+		$mock->freeze();
 
-		//$this->assertEquals(11, $mock->a()->b());
-		//$this->assertEquals(11, $mock->a()->c('11'));
-		//$this->assertEquals(12, $mock->a('b')->c('b'));
+		// $this->assertEquals(11, $mock->a()->b());
+		// $this->assertEquals(11, $mock->a()->c('11'));
+		// $this->assertEquals(12, $mock->a('b')->c('b'));
 	}
 }

@@ -142,6 +142,12 @@ class Mock implements MethodInterface
 
 	private $callCountReal = 0;
 
+	public function __construct($name = "", $args = array())
+	{
+		$this->name = $name;
+		$this->args = $args;
+	}
+
 	public function freeze()
 	{
 		$this->__mode = self::MODE_COLLECTING;
@@ -196,12 +202,6 @@ class Mock implements MethodInterface
 		}
 	}
 
-	public function __construct($name = "", $args = array())
-	{
-		$this->name = $name;
-		$this->args = $args;
-	}
-
 	public function __call($name, $args)
 	{
 		$hash = $this->hashArgs($args);
@@ -212,6 +212,30 @@ class Mock implements MethodInterface
 		} else if (self::MODE_COLLECTING == $this->__mode) {
 			$useHash = $this->useHash($name, $args, $hash);
 			return $this->__methods[$name][$useHash]->invoke($args);
+		}
+	}
+
+	public function invoke($args)
+	{
+		switch ($this->invokeStrategy) {
+		case self::INVOKE_STRATEGY_RETURN:
+			$this->callCountReal++;
+			return $this->invokeValue;
+			break;
+		case self::INVOKE_STRATEGY_THROW:
+			$this->callCountReal++;
+			throw $this->invokeValue;
+			break;
+		case self::INVOKE_STRATEGY_CALLBACK:
+			$this->callCountReal++;
+			return call_user_func_array($this->invokeValue, $args);
+
+		default:
+			$this->callCountReal++;
+			if (isset($this->__methods[$this->name][$this->hashArgs($args)])) {
+				return $this->__methods[$this->name][$this->hashArgs($args)];
+			}
+			break;
 		}
 	}
 
@@ -246,30 +270,6 @@ class Mock implements MethodInterface
 
 		if (! $passed) {
 			throw new MockException($message, $code);
-		}
-	}
-
-	public function invoke($args)
-	{
-		switch ($this->invokeStrategy) {
-		case self::INVOKE_STRATEGY_RETURN:
-			$this->callCountReal++;
-			return $this->invokeValue;
-			break;
-		case self::INVOKE_STRATEGY_THROW:
-			$this->callCountReal++;
-			throw $this->invokeValue;
-			break;
-		case self::INVOKE_STRATEGY_CALLBACK:
-			$this->callCountReal++;
-			return call_user_func_array($this->invokeValue, $args);
-
-		default:
-			$this->callCountReal++;
-			if (isset($this->__methods[$this->name][$this->hashArgs($args)])) {
-				return $this->__methods[$this->name][$this->hashArgs($args)];
-			}
-			break;
 		}
 	}
 

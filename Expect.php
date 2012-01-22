@@ -2,6 +2,7 @@
 
 namespace Mockista;
 use PHPUnit_Framework_Assert;
+
 require_once "PHPUnit/Framework/Assert.php";
 
 function I_expect($value = null)
