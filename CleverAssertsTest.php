@@ -41,5 +41,27 @@ class CleverAssertsTest extends KDev_Test
 			Mockista\I_expect("abc")->isEqualTo("ddd");
 		});		
 	}
+
+
+	function testTrue()
+	{
+		$this->willThrow(function() {
+			Mockista\I_expect(true)->true;
+		});
+	}
+
+	function testFalse()
+	{
+		$this->willThrow(function() {
+			Mockista\I_expect(false)->false;
+		});
+	}
+
+	function testEquals()
+	{
+		$this->willThrow(function() {
+			Mockista\I_expect("abc")->equals("ddd");
+		});		
+	}	
 }
 

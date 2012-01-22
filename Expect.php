@@ -32,9 +32,12 @@ class Expectation
 
 	function __call($name, $args = array())
 	{
-		return call_user_func_array(self::$callbacks[$name], array_merge(array($this), $args));
+		if (array_key_exists($name, self::$callbacks)) {
+			return call_user_func_array(self::$callbacks[$name], array_merge(array($this), $args));
+		} else {
+			return call_user_func_array(array("PHPUnit_Framework_Assert", "assert" . ucfirst($name)), array_merge(array($this), $args));
+		}
 	}
-
 }
 
 Expectation::setCallback("isTrue", function ($self) {
@@ -46,5 +49,5 @@ Expectation::setCallback("isFalse", function ($self) {
 });
 
 Expectation::setCallback("isEqualTo", function ($self, $value) {
-	PHPUnit_Framework_Assert::assertEquals($self->value, $value);
+	PHPUnit_Framework_Assert::assertEquals($value, $self->value);
 });
