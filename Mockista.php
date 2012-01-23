@@ -113,7 +113,7 @@ class MockChain
 	}
 }
 
-class Mock implements MethodInterface
+class MockCommon
 {
 	const MODE_LEARNING = 1;
 	const MODE_COLLECTING = 2;
@@ -130,113 +130,22 @@ class Mock implements MethodInterface
 
 	protected $__methods = array();
 
-	private $args;
+	protected $args;
 
-	private $callType;
-	private $callCount;
+	protected $callType;
+	protected $callCount;
 
-	private $invokeStrategy;
-	private $invokeValue;
+	protected $invokeStrategy;
+	protected $invokeValue;
 
-	private $name = '';
+	protected $name = '';
 
-	private $callCountReal = 0;
+	protected $callCountReal = 0;
 
 	public function __construct($name = "", $args = array())
 	{
 		$this->name = $name;
 		$this->args = $args;
-	}
-
-	public function freeze()
-	{
-		$this->__mode = self::MODE_COLLECTING;
-		foreach ($this->__methods as $key1) {
-			foreach($key1 as $key2=>$mockObject) {
-				$mockObject->freeze();
-			}
-		}
-		return $this;
-	}
-
-
-	public function assertExpectations()
-	{
-		$this->assertExpectationsOnMyself();
-		foreach ($this->__methods as $method) {
-			foreach ($method as $argCombinationMethod) {
-				$argCombinationMethod->assertExpectations();
-			}
-		}
-	}
-
-	protected function hashArgs($args)
-	{
-		if (array() == $args) {
-			return 0;
-		} else {
-			try {
-				return md5(serialize($args));
-			} catch (\Exception $e) {
-				return md5(serialize(var_export($args, TRUE)));
-			}
-		}
-	}
-
-	protected function useHash($name, $args, $hash)
-	{
-		if ($hash !== 0 && isset($this->__methods[$name][$hash])) {
-			return $hash;
-		} else if (isset($this->__methods[$name][0])) {
-			return 0;
-		} else {
-			$argsStr = var_export($args, true);
-			throw new MockException("Unexpected call in method: $name args: $argsStr", MockException::CODE_INVALID_ARGS);
-		}
-	}
-
-	protected function checkMethodsNamespace($name)
-	{
-		if (! isset($this->__methods[$name])) {
-			$this->__methods[$name] = array();
-		}
-	}
-
-	public function __call($name, $args)
-	{
-		$hash = $this->hashArgs($args);
-		$this->checkMethodsNamespace($name);
-		if (self::MODE_LEARNING == $this->__mode) {
-			$this->__methods[$name][$hash] = new Mock($name, $args);
-			return $this->__methods[$name][$hash];
-		} else if (self::MODE_COLLECTING == $this->__mode) {
-			$useHash = $this->useHash($name, $args, $hash);
-			return $this->__methods[$name][$useHash]->invoke($args);
-		}
-	}
-
-	public function invoke($args)
-	{
-		switch ($this->invokeStrategy) {
-		case self::INVOKE_STRATEGY_RETURN:
-			$this->callCountReal++;
-			return $this->invokeValue;
-			break;
-		case self::INVOKE_STRATEGY_THROW:
-			$this->callCountReal++;
-			throw $this->invokeValue;
-			break;
-		case self::INVOKE_STRATEGY_CALLBACK:
-			$this->callCountReal++;
-			return call_user_func_array($this->invokeValue, $args);
-
-		default:
-			$this->callCountReal++;
-			if (isset($this->__methods[$this->name][$this->hashArgs($args)])) {
-				return $this->__methods[$this->name][$this->hashArgs($args)];
-			}
-			break;
-		}
 	}
 
 	public function assertExpectationsOnMyself()
@@ -270,6 +179,36 @@ class Mock implements MethodInterface
 
 		if (! $passed) {
 			throw new MockException($message, $code);
+		}
+	}
+
+	public function assertExpectations()
+	{
+		$this->assertExpectationsOnMyself();
+		foreach ($this->__methods as $method) {
+			foreach ($method as $argCombinationMethod) {
+				$argCombinationMethod->assertExpectations();
+			}
+		}
+	}
+	
+	protected function checkMethodsNamespace($name)
+	{
+		if (! isset($this->__methods[$name])) {
+			$this->__methods[$name] = array();
+		}
+	}
+
+	protected function hashArgs($args)
+	{
+		if (array() == $args) {
+			return 0;
+		} else {
+			try {
+				return md5(serialize($args));
+			} catch (\Exception $e) {
+				return md5(serialize(var_export($args, TRUE)));
+			}
 		}
 	}
 
@@ -357,6 +296,74 @@ class Mock implements MethodInterface
 		return $this->$name();
 	}
 
+	public function freeze()
+	{
+		$this->__mode = self::MODE_COLLECTING;
+		foreach ($this->__methods as $key1) {
+			foreach($key1 as $key2=>$mockObject) {
+				$mockObject->freeze();
+			}
+		}
+		return $this;
+	}
+
+
+}
+
+class Mock extends MockCommon implements MethodInterface
+{
+
+
+	protected function useHash($name, $args, $hash)
+	{
+		if ($hash !== 0 && isset($this->__methods[$name][$hash])) {
+			return $hash;
+		} else if (isset($this->__methods[$name][0])) {
+			return 0;
+		} else {
+			$argsStr = var_export($args, true);
+			throw new MockException("Unexpected call in method: $name args: $argsStr", MockException::CODE_INVALID_ARGS);
+		}
+	}
+
+	public function __call($name, $args)
+	{
+		$hash = $this->hashArgs($args);
+		$this->checkMethodsNamespace($name);
+		if (self::MODE_LEARNING == $this->__mode) {
+			$this->__methods[$name][$hash] = new Mock($name, $args);
+			var_dump($name, $args);
+			return $this->__methods[$name][$hash];
+		} else if (self::MODE_COLLECTING == $this->__mode) {
+			$useHash = $this->useHash($name, $args, $hash);
+			var_export(array($name, $args, $hash, $useHash));
+			return $this->__methods[$name][$useHash]->invoke($args);
+		}
+	}
+
+	public function invoke($args)
+	{
+		switch ($this->invokeStrategy) {
+		case self::INVOKE_STRATEGY_RETURN:
+			$this->callCountReal++;
+			return $this->invokeValue;
+			break;
+		case self::INVOKE_STRATEGY_THROW:
+			$this->callCountReal++;
+			throw $this->invokeValue;
+			break;
+		case self::INVOKE_STRATEGY_CALLBACK:
+			$this->callCountReal++;
+			return call_user_func_array($this->invokeValue, $args);
+
+		default:
+			$this->callCountReal++;
+			if (isset($this->__methods[$this->name][$this->hashArgs($args)])) {
+				return $this->__methods[$this->name][$this->hashArgs($args)];
+			}
+			break;
+		}
+	}
 }
 
 
