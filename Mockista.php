@@ -24,6 +24,7 @@ class MockFactory
 	{
 		$defaults = array();
 		$class = false;
+		$constructorArgs = array();
 
 		if (1 == sizeof($args)) {
 			if (is_array($args[0])) {
@@ -46,6 +47,7 @@ class MockFactory
 			
 			$newName = str_replace("\\", "_", $class) . '_' . uniqid();
 			$code = $classGenerator->generate($class, $newName);
+			
 			eval($code);
 			$mock = new $newName;
 			$mock->mockista = new Mock();
@@ -439,6 +441,9 @@ class ClassGenerator
 	}
 ';
 		foreach ($methods as $name => $method) {
+			if ("__call" == $name) {
+					continue;
+			}
 			$out .= $this->generateMethod($name, $method);
 		}
 		$out .= "}\n";
@@ -459,10 +464,12 @@ class ClassGenerator
 	{
 		$params = $this->generateParams($method['parameters']);
 		$static = $method['static'] ? 'static ' : '';
+		$amp = $methodName == "__get" ? '&' : '';
+		$body = $methodName !== '__construct' ? "return call_user_func_array(array(\$this->mockista, '$methodName'), func_get_args());" : '';
 		$out = "
-	{$static}function $methodName($params)
+	{$static}function {$amp}$methodName($params)
 	{
-		return call_user_func_array(array(\$this->mockista, '$methodName'), func_get_args());
+		$body
 	}
 ";
 		return $out;
