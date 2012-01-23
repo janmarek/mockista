@@ -10,6 +10,11 @@ function I_expect($value = null)
 	return new Expectation($value);
 }
 
+function expect($value = null)
+{
+	return I_expect($value);
+}
+
 class Expectation
 {
 	public $value;
@@ -52,3 +57,10 @@ Expectation::setCallback("isFalse", function ($self) {
 Expectation::setCallback("isEqualTo", function ($self, $value) {
 	PHPUnit_Framework_Assert::assertEquals($value, $self->value);
 });
+
+Expectation::setCallback("sizeIs", function ($self, $value) {
+	PHPUnit_Framework_Assert::assertEquals($value, sizeof($self->value));
+});
+
+
+

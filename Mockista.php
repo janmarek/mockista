@@ -332,11 +332,9 @@ class Mock extends MockCommon implements MethodInterface
 		$this->checkMethodsNamespace($name);
 		if (self::MODE_LEARNING == $this->__mode) {
 			$this->__methods[$name][$hash] = new Mock($name, $args);
-			var_dump($name, $args);
 			return $this->__methods[$name][$hash];
 		} else if (self::MODE_COLLECTING == $this->__mode) {
 			$useHash = $this->useHash($name, $args, $hash);
-			var_export(array($name, $args, $hash, $useHash));
 			return $this->__methods[$name][$useHash]->invoke($args);
 		}
 	}
@@ -394,6 +392,8 @@ class MethodFinder
 		foreach ($parameters as $parameter) {
 			$parameterDesc = array(
 				'name'=>$parameter->getName(),
+				'typehint'=>null,	
+								
 			);
 			if ($parameter->isOptional()) {
 				$parameterDesc['default'] = $parameter->getDefaultValue();
