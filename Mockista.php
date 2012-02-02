@@ -49,7 +49,7 @@ class MockFactory
 			$code = $classGenerator->generate($class, $newName);
 			
 			eval($code);
-			$mock = new $newName;
+			$mock = new $newName(null, null, null, null, null, null, null, null, null, null);
 			$mock->mockista = new Mock();
 		} else {
 			$mock = new Mock();
