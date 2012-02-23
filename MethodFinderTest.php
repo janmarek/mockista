@@ -37,7 +37,6 @@ class MethodFinderTest extends KDev_Test
 		$this->object = new Mockista\MethodFinder;
 	}
 
-
 	function testMethodAStaticNotStatic()
 	{
 		$methods = $this->object->methods("MethodFinderTest_Dummy1234");

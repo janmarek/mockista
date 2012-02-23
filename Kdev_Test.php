@@ -1,5 +1,5 @@
 <?php
-if (! class_exists("KDev_Test")) {
+if (class_exists("PHPUnit_Framework_TestCase") && ! class_exists("KDev_Test")) {
 
 	/**
 	 * Tests base class
