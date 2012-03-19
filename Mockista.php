@@ -407,6 +407,9 @@ class MethodFinder
 				if ($klass) {
 					$parameterDesc['typehint'] = $klass->getName();
 				}
+				else {
+					$parameterDesc['typehint'] = null;
+				}
 			}
 			$out[$parameter->getPosition()] = $parameterDesc;
 		}
