@@ -417,68 +417,18 @@ class MethodFinder
 	}
 }
 
-class ClassGenerator
+
+
+abstract class BaseClassGenerator
 {
-	private $methodsFinder;
+	protected $methodFinder;
 
 	public function setMethodFinder($methodFinder)
 	{
 		return $this->methodFinder = $methodFinder;
 	}
 	
-	function generate($inheritedClass, $newName)
-	{
-		$extends = class_exists($inheritedClass) ? "extends" : "implements";
-		$methods = $this->methodFinder->methods($inheritedClass);
-
-		$out = "";
-		if ($this->containsNamespace($inheritedClass)) {
-			$out .= "use {$inheritedClass};\n\n";
-			$inheritedClass = $this->removeNameSpace($inheritedClass);
-		}
-		$out .= "class $newName $extends $inheritedClass\n{\n	public \$mockista;\n";
-		$out .= '
-	function __call($name, $args)
-	{
-		return call_user_func_array(array($this->mockista, $name), $args);
-	}
-';
-		foreach ($methods as $name => $method) {
-			if ("__call" == $name) {
-					continue;
-			}
-			$out .= $this->generateMethod($name, $method);
-		}
-		$out .= "}\n";
-		return $out;
-	}
-
-	private function containsNamespace($str)
-	{
-		return false !== strpos($str, "\\");
-	}
-
-	private function removeNameSpace($str)
-	{
-		return substr($str, strrpos($str, "\\") + 1);
-	}
-
-	private function generateMethod($methodName, $method)
-	{
-		$params = $this->generateParams($method['parameters']);
-		$static = $method['static'] ? 'static ' : '';
-		$amp = $methodName == "__get" ? '&' : '';
-		$body = $methodName !== '__construct' ? "return call_user_func_array(array(\$this->mockista, '$methodName'), func_get_args());" : '';
-		$out = "
-	{$static}function {$amp}$methodName($params)
-	{
-		$body
-	}
-";
-		return $out;
-	}
-
-	private function generateParams($params)
+	protected function generateParams($params)
 	{
 		$out = array();
 		foreach ($params as $param) {
@@ -500,8 +450,120 @@ class ClassGenerator
 		return join(', ', $out);
 	}
 
-	private function removeNewLines($str)
+	protected function removeNewLines($str)
 	{
 		return str_replace("\n", "", $str);
 	}
+
+
+	protected function containsNamespace($str)
+	{
+		return false !== strpos($str, "\\");
+	}
+
+	protected function removeNameSpace($str)
+	{
+		return substr($str, strrpos($str, "\\") + 1);
+	}
+
+	protected function namespaceCheck($out, $inheritedClass)
+	{
+		if ($this->containsNamespace($inheritedClass)) {
+			$out .= "use {$inheritedClass};\n\n";
+			$inheritedClass = $this->removeNameSpace($inheritedClass);
+		}
+		return array($out, $inheritedClass);
+	}
 }
+
+class ClassGenerator extends BaseClassGenerator
+{
+	function generate($inheritedClass, $newName)
+	{
+		$extends = class_exists($inheritedClass) ? "extends" : "implements";
+		$methods = $this->methodFinder->methods($inheritedClass);
+
+		list($out, $inheritedClass) = $this->namespaceCheck("", $inheritedClass);
+
+		$out .= "class $newName $extends $inheritedClass\n{\n	public \$mockista;\n";
+		$out .= '
+	function __call($name, $args)
+	{
+		return call_user_func_array(array($this->mockista, $name), $args);
+	}
+';
+		foreach ($methods as $name => $method) {
+			$out .= $this->generateMethod($name, $method);
+		}
+		$out .= "}\n";
+		return $out;
+	}
+
+	private function generateMethod($methodName, $method)
+	{
+		$params = $this->generateParams($method['parameters']);
+		$static = $method['static'] ? 'static ' : '';
+		$out = "
+	{$static}function $methodName($params)
+	{
+		return call_user_func_array(array(\$this->mockista, '$methodName'), func_get_args());
+	}
+";
+		return $out;
+	}
+
+}
+
+class LazyProxyGenerator extends BaseClassGenerator
+{
+
+	function generate($inheritedClass, $newName)
+	{
+		$methods = $this->methodFinder->methods($inheritedClass);
+		list($out, $inheritedClass) = $this->namespaceCheck("", $inheritedClass);
+
+		$out .= "class $newName extends $inheritedClass\n{\n	private \$__instance;\n	private \$__constructorArgs = array();";
+		$out .= '
+	function __construct()
+	{
+		$this->__constructorArgs = func_get_args();
+	}
+
+	private function __constructInstance()
+	{
+		if (! $this->__instance) {
+			$classGenerator = new \ReflectionClass("'.$inheritedClass.'");
+			$this->__instance = $classGenerator->newInstanceArgs($this->__constructorArgs);
+		}
+	}
+
+	function __call($name, $args)
+	{
+		$this->__constructInstance();
+		return call_user_func_array(array($this->__instance, $name), $args);
+	}
+';
+		foreach ($methods as $name => $method) {
+			$out .= $this->generateMethod($name, $method);
+		}
+		$out .= "}\n";
+		return $out;
+	}
+
+	private function generateMethod($methodName, $method)
+	{
+		if ($methodName !== '__construct') {
+			$params = $this->generateParams($method['parameters']);
+			$static = $method['static'] ? 'static ' : '';
+			$out = "
+	{$static}function $methodName($params)
+	{
+		\$this->__constructInstance();
+		return call_user_func_array(array(\$this->__instance, '$methodName'), func_get_args());
+	}
+";
+			return $out;
+		}
+	}
+}
+
