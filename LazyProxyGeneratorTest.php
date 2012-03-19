@@ -18,11 +18,6 @@ class LazyProxyGeneratorTest_Auxiliary_Lazy_Loaded_Class
 	}
 }
 
-
-/**
- *
- * @author Jiri Knesl
-**/
 class LazyProxyGeneratorTest extends KDev_Test
 {
 	/**
