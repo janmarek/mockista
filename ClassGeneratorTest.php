@@ -13,11 +13,16 @@ class ClassGeneratorTest_Method
 	function abc($a, $def = 123, $ghi = 'a')
 	{
 	}
+
+	function __call($name, $args)
+	{
+	}
 }
 
 interface ClassGeneratorTest_Interface
 {
 	function ai(Array $ax = array(1, 2, 3));
+
 }
 
 class ClassGeneratorTest extends KDev_Test

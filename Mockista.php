@@ -493,6 +493,9 @@ class ClassGenerator extends BaseClassGenerator
 	}
 ';
 		foreach ($methods as $name => $method) {
+			if ("__call" == $name) {
+				continue;
+			}
 			$out .= $this->generateMethod($name, $method);
 		}
 		$out .= "}\n";
