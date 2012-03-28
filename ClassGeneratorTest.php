@@ -10,7 +10,7 @@ class ClassGeneratorTest_Empty
 
 class ClassGeneratorTest_Method
 {
-	function abc($a, $def = 123, $ghi = 'a')
+	function &abc(&$a, $def = 123, $ghi = 'a')
 	{
 	}
 
@@ -85,7 +85,7 @@ class A_B_ClassGeneratorTest_Empty_Generated implements ClassGeneratorTest_Empty
 		return call_user_func_array(array($this->mockista, $name), $args);
 	}
 
-	function abc($a, $def = 123, $ghi = \'a\')
+	function &abc(&$a, $def = 123, $ghi = \'a\')
 	{
 		return call_user_func_array(array($this->mockista, \'abc\'), func_get_args());
 	}

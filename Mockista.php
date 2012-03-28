@@ -448,6 +448,10 @@ abstract class BaseClassGenerator
 				$outArr = '';
 			}
 
+			if ($param['passedByReference']) {
+				$outArr .= '&';
+			}
+
 			$outArr .= '$' . $param['name'];
 			if (array_key_exists('default', $param)) {
 				$outArr .= ' = ' . $this->removeNewLines(
@@ -515,8 +519,9 @@ class ClassGenerator extends BaseClassGenerator
 	{
 		$params = $this->generateParams($method['parameters']);
 		$static = $method['static'] ? 'static ' : '';
+		$passedByReference = $method['passedByReference'] ? '&' : '';
 		$out = "
-	{$static}function $methodName($params)
+	{$static}function $passedByReference$methodName($params)
 	{
 		return call_user_func_array(array(\$this->mockista, '$methodName'), func_get_args());
 	}
@@ -567,8 +572,9 @@ class LazyProxyGenerator extends BaseClassGenerator
 		if ($methodName !== '__construct') {
 			$params = $this->generateParams($method['parameters']);
 			$static = $method['static'] ? 'static ' : '';
+		$passedByReference = $method['passedByReference'] ? '&' : '';
 			$out = "
-	{$static}function $methodName($params)
+	{$static}function $passedByReference$methodName($params)
 	{
 		\$this->__constructInstance();
 		return call_user_func_array(array(\$this->__instance, '$methodName'), func_get_args());
