@@ -25,7 +25,7 @@ class MethodFinderTest_Dummy1234 extends MethodFinderTest_Dummy1234Parent implem
 	{
 	}
 
-	function c(Exception $d = null)
+	function &c(Exception &$d = null)
 	{
 	}
 }
@@ -51,6 +51,7 @@ class MethodFinderTest extends KDev_Test
 		$methods = $this->object->methods("MethodFinderTest_Dummy1234");
 		$this->assertEquals(1, sizeof($methods['b']['parameters']));
 		$this->assertTrue($methods['b']['static']);
+		$this->assertFalse($methods['b']['passedByReference']);
 	}
 
 	function testDefaultParam()
@@ -60,5 +61,7 @@ class MethodFinderTest extends KDev_Test
 		$this->assertEquals('Array', $methods['b']['parameters'][0]['typehint']);
 
 		$this->assertEquals('Exception', $methods['c']['parameters'][0]['typehint']);
+		$this->assertEquals(true, $methods['c']['parameters'][0]['passedByReference']);
+		$this->assertTrue($methods['c']['passedByReference']);
 	}
 }

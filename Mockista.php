@@ -384,7 +384,13 @@ class MethodFinder
 		return array(
 			'parameters'=>$this->getParameters($method),
 			'static'=>$method->isStatic(),
+			'passedByReference'=>$this->isMethodPassedByReference($method),
 		);
+	}
+
+	private function isMethodPassedByReference($method)
+	{
+		return false !== strpos($method, '&');
 	}
 
 	function getParameters($method)
@@ -397,6 +403,9 @@ class MethodFinder
 				'typehint'=>null,	
 								
 			);
+
+			$parameterDesc['passedByReference'] = $parameter->isPassedByReference();
+			
 			if ($parameter->isOptional()) {
 				$parameterDesc['default'] = $parameter->getDefaultValue();
 			}
