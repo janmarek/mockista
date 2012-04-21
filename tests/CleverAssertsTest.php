@@ -2,7 +2,7 @@
 
 use Mockista\MethodInterface;
 
-require_once __DIR__ . "/bootstrap.php";
+require_once dirname(__DIR__) . "/bootstrap.php";
 
 class CleverAssertsTest extends KDev_Test
 {
