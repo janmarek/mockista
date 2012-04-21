@@ -51,6 +51,10 @@ class ClassGeneratorTest extends KDev_Test
 {
 	public $mockista;
 
+        function __construct()
+        {
+        }
+
 	function __call($name, $args)
 	{
 		return call_user_func_array(array($this->mockista, $name), $args);
@@ -69,6 +73,10 @@ class A_B_ClassGeneratorTest_Empty_Generated implements ClassGeneratorTest_Empty
 {
 	public $mockista;
 
+        function __construct()
+        {
+        }
+
 	function __call($name, $args)
 	{
 		return call_user_func_array(array($this->mockista, $name), $args);
@@ -85,6 +93,10 @@ class A_B_ClassGeneratorTest_Empty_Generated implements ClassGeneratorTest_Empty
 		$classIncludingMethod = 'class ClassGeneratorTest_Method_Generated extends ClassGeneratorTest_Method
 {
 	public $mockista;
+
+        function __construct()
+        {
+        }
 
 	function __call($name, $args)
 	{
@@ -107,6 +119,10 @@ class A_B_ClassGeneratorTest_Empty_Generated implements ClassGeneratorTest_Empty
 		$interfaceBasedClass = 'class ClassGeneratorTest_Interface_Generated implements ClassGeneratorTest_Interface
 {
 	public $mockista;
+
+        function __construct()
+        {
+        }
 
 	function __call($name, $args)
 	{

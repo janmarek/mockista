@@ -501,6 +501,10 @@ class ClassGenerator extends BaseClassGenerator
 
 		$out .= "class $newName $extends $inheritedClass\n{\n	public \$mockista;\n";
 		$out .= '
+        function __construct()
+        {
+        }
+
 	function __call($name, $args)
 	{
 		return call_user_func_array(array($this->mockista, $name), $args);
