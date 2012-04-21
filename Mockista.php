@@ -206,13 +206,25 @@ class MockCommon
 		if (array() == $args) {
 			return 0;
 		} else {
+			$hash = "";
+			foreach ($args as $arg) {
+				$hash .= $this->hashArg($arg);
+			}
+			return md5($hash);
+		}
+	}
+	protected function hashArg($arg) {
+		if (is_object($arg)) {
+			return spl_object_hash($arg);
+		} else {
 			try {
-				return md5(serialize($args));
+				return md5(serialize($arg));
 			} catch (\Exception $e) {
-				return md5(serialize(var_export($args, TRUE)));
+				return md5(serialize(var_export($arg, TRUE)));
 			}
 		}
 	}
+
 
 	public function once()
 	{
