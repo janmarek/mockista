@@ -8,6 +8,11 @@ class ClassGeneratorTest_Empty
 {
 }
 
+final class ClassGeneratorTest_Final
+{
+
+}
+
 class ClassGeneratorTest_Method
 {
 	function &abc(&$a, $def = 123, $ghi = 'a')
@@ -141,4 +146,14 @@ class A_B_ClassGeneratorTest_Empty_Generated implements ClassGeneratorTest_Empty
 		$this->object->setMethodFinder(new Mockista\MethodFinder);
 		$this->assertEquals($interfaceBasedClass, $this->object->generate("ClassGeneratorTest_Interface", "ClassGeneratorTest_Interface_Generated"));
 	}
+        
+        /**
+         * @expectedException Mockista\ClassGeneratorException
+         * @expectedExceptionCode 1 
+         */
+        function testGenerateThrowsExceptionOnFinalClass()
+        {
+            $this->object->setMethodFinder(new Mockista\MethodFinder);
+            $this->object->generate("ClassGeneratorTest_Final", "ClassGeneratorTest_Final_Generated");
+        }
 }

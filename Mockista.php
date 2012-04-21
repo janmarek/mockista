@@ -343,7 +343,7 @@ class Mock extends MockCommon implements MethodInterface
 			throw new MockException("Unexpected call in method: $name args: $argsStr", MockException::CODE_INVALID_ARGS);
 		}
 	}
-
+ 
 	public function __call($name, $args)
 	{
 		$hash = $this->hashArgs($args);
@@ -510,6 +510,11 @@ abstract class BaseClassGenerator
 	}
 }
 
+class ClassGeneratorException extends \RuntimeException
+{
+    const CODE_FINAL_CLASS_CANNOT_BE_MOCKED = 1;
+}
+
 class ClassGenerator extends BaseClassGenerator
 {
 	function generate($inheritedClass, $newName)
@@ -518,6 +523,11 @@ class ClassGenerator extends BaseClassGenerator
 		$methods = $this->methodFinder->methods($inheritedClass);
 
 		list($out, $inheritedClass) = $this->namespaceCheck("", $inheritedClass);
+                
+                $isFinal = $this->isFinal($inheritedClass);
+                if ($isFinal) {
+                    throw new ClassGeneratorException("Cannot mock final class", ClassGeneratorException::CODE_FINAL_CLASS_CANNOT_BE_MOCKED);
+                }
 
 		$out .= "class $newName $extends $inheritedClass\n{\n	public \$mockista;\n";
 		$out .= '
@@ -539,6 +549,15 @@ class ClassGenerator extends BaseClassGenerator
 		$out .= "}\n";
 		return $out;
 	}
+        
+        private function isFinal($inheritedClass)
+        {
+            if (! class_exists($inheritedClass)) {
+                return false;
+            }
+            $klass = new \ReflectionClass($inheritedClass);
+            return $klass->isFinal();
+        }
 
 	private function generateMethod($methodName, $method)
 	{
