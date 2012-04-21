@@ -13,6 +13,9 @@ class ClassGeneratorTest_Method
 	function &abc(&$a, $def = 123, $ghi = 'a')
 	{
 	}
+        
+        function __construct($a) {
+        }
 
 	function __call($name, $args)
 	{
