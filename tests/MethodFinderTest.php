@@ -14,7 +14,7 @@ interface MethodFinderTest_Dummy1234If1
 
 class MethodFinderTest_Dummy1234Parent implements MethodFinderTest_Dummy1234If1
 {
-	function ab()
+	final function ab()
 	{
 	}
 }
@@ -43,6 +43,7 @@ class MethodFinderTest extends KDev_Test
 		$this->assertTrue(array_key_exists("ab", $methods));
 		$this->assertTrue(array_key_exists("parameters", $methods['ab']));
 		$this->assertEquals(0, sizeof($methods['ab']['parameters']));
+                $this->assertEquals(true, $methods['ab']['final']);
 		$this->assertFalse($methods['ab']['static']);
 	}
 

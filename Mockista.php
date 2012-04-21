@@ -379,12 +379,13 @@ class MethodFinder
 		return $out;
 	}
 
-	function getMethodDescription($method)
+	function getMethodDescription(\ReflectionMethod $method)
 	{
 		return array(
 			'parameters'=>$this->getParameters($method),
 			'static'=>$method->isStatic(),
 			'passedByReference'=>$this->isMethodPassedByReference($method),
+                        'final'=>$method->isFinal(),
 		);
 	}
 
@@ -506,7 +507,7 @@ class ClassGenerator extends BaseClassGenerator
 	}
 ';
 		foreach ($methods as $name => $method) {
-			if ("__call" == $name) {
+			if ("__call" == $name || $method['final']) {
 				continue;
 			}
 			$out .= $this->generateMethod($name, $method);

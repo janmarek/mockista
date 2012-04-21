@@ -17,6 +17,11 @@ class ClassGeneratorTest_Method
 	function __call($name, $args)
 	{
 	}
+        
+        final function finalMethod()
+        {
+        
+        }
 }
 
 interface ClassGeneratorTest_Interface
@@ -38,6 +43,7 @@ class ClassGeneratorTest extends KDev_Test
 		$mock->methods()->once->andReturn(array());
 		return $mock;
 	}
+        
 
 	function testEmptyClass()
 	{
