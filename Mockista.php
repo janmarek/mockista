@@ -138,7 +138,10 @@ class MockCommon
 	protected $callCount;
 
 	protected $invokeStrategy;
-	protected $invokeValue;
+        protected $thrownException;
+        protected $calledCallback;
+	protected $invokeValues = array();
+        protected $invokeIndex = 0;
 
 	protected $name = '';
 
@@ -287,21 +290,22 @@ class MockCommon
 	public function andReturn($returnValue)
 	{
 		$this->invokeStrategy = self::INVOKE_STRATEGY_RETURN;
-		$this->invokeValue = $returnValue;
+		$this->invokeValues = func_get_args();
+                $this->invokeIndex = 0;
 		return $this;
 	}
 
 	public function andThrow($throwException)
 	{
 		$this->invokeStrategy = self::INVOKE_STRATEGY_THROW;
-		$this->invokeValue = $throwException;
+		$this->thrownException = $throwException;
 		return $this;
 	}
 
 	public function andCallback($callback)
 	{
 		$this->invokeStrategy = self::INVOKE_STRATEGY_CALLBACK;
-		$this->invokeValue = $callback;
+		$this->calledCallback = $callback;
 		return $this;
 	}
 
@@ -358,15 +362,19 @@ class Mock extends MockCommon implements MethodInterface
 		switch ($this->invokeStrategy) {
 		case self::INVOKE_STRATEGY_RETURN:
 			$this->callCountReal++;
-			return $this->invokeValue;
+			$out = $this->invokeValues[$this->invokeIndex];
+                        if ($this->invokeIndex < sizeof($this->invokeValues) - 1) {
+                            $this->invokeIndex++;
+                        }
+                        return $out;
 			break;
 		case self::INVOKE_STRATEGY_THROW:
 			$this->callCountReal++;
-			throw $this->invokeValue;
+			throw $this->thrownException;
 			break;
 		case self::INVOKE_STRATEGY_CALLBACK:
 			$this->callCountReal++;
-			return call_user_func_array($this->invokeValue, $args);
+			return call_user_func_array($this->calledCallback, $args);
 
 		default:
 			$this->callCountReal++;
