@@ -1,7 +1,7 @@
 {
 	"name": "jiriknesl/mockista",
-	"description": "Mockista is library for mocking, which I've written, because I hate mocking in PHPUnit.",
-	"keywords": ["phpunit", "testing", "tests", "mockista"],
+	"description": "Mockista is library for mocking, which I've written, because I find mocking in PHPUnit slow.",
+	"keywords": ["phpunit", "testing", "tests", "mockista", "mock", "mocking", "tdd" "bdd"],
 	"homepage": "http://www.mockista.com/",
 	"authors": [
 		{
