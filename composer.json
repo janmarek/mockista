@@ -1,0 +1,12 @@
+{
+	"name": "jiriknesl/mockista",
+	"description": "Mockista is library for mocking, which I've written, because I hate mocking in PHPUnit.",
+	"keywords": ["phpunit", "testing", "tests", "mockista"],
+	"homepage": "http://www.mockista.com/",
+	"authors": [
+		{
+			"name": "Jiří Knesl",
+			"homepage": "http://www.knesl.com/"
+		}
+	]
+}
