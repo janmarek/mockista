@@ -13,6 +13,6 @@
 		"psr-0": {
 			"Mockista": ""
 		},
-		"files": ["bootstrap.php"]
+		"files": ["Mockista/functions.php"]
 	}
 }
