@@ -17,7 +17,7 @@ class MockFactoryTest_Generated
 	}
 }
 
-class MockFactoryTest extends \KDev_Test
+class MockFactoryTest extends \PHPUnit_Framework_TestCase
 {
 	function testGenerateClass()
 	{
@@ -28,12 +28,13 @@ class MockFactoryTest extends \KDev_Test
 	function mockMethods()
 	{
 		$obj = \Mockista\mock("Mockista\\Test\\MockFactoryTest_Generated", array('x'=>1, 'y'=>function(){return 2;}));
+		$obj->freeze();
 		return $obj;
 	}
 
 	function testGenerateClassArgsMethods()
 	{
-		$obj = $this->mockMethods;
+		$obj = $this->mockMethods();
 		$this->assertTrue($obj instanceof MockFactoryTest_Generated);
 		$this->assertEquals(1, $obj->x);
 		$this->assertEquals(2, $obj->y());

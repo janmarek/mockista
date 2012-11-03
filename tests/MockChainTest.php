@@ -3,9 +3,9 @@
 
 use Mockista\MethodInterface;
 
-class MockChainTest extends KDev_Test
+class MockChainTest extends PHPUnit_Framework_TestCase
 {
-	function prepare()
+	function setUp()
 	{
 		$this->object = new Mockista\MockChain;
 	}
@@ -14,14 +14,17 @@ class MockChainTest extends KDev_Test
 	{
 		$mock = Mockista\mock();
 		$mock->d(11)->andReturn(true);
+		$mock->freeze();
 		return $mock;
 	}
 
 	function testAddLastCalledMethod()
 	{
-		$this->object->addLastCalledMethod("d", $this->mockD);
+		$mock = $this->mockD();
+		$this->object->addLastCalledMethod("d", $mock);
 		$ret = $this->object->a->b()->c("abc")->d(11);
 		$this->assertTrue($ret);
+		$mock->assertExpectations();
 	}
 }
 

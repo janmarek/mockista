@@ -28,9 +28,9 @@ class MethodFinderTest_Dummy1234 extends MethodFinderTest_Dummy1234Parent implem
 	}
 }
 
-class MethodFinderTest extends KDev_Test
+class MethodFinderTest extends PHPUnit_Framework_TestCase
 {
-	function prepare()
+	function setUp()
 	{
 		$this->object = new Mockista\MethodFinder;
 	}

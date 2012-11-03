@@ -36,9 +36,9 @@ interface ClassGeneratorTest_Interface
 
 }
 
-class ClassGeneratorTest extends KDev_Test
+class ClassGeneratorTest extends PHPUnit_Framework_TestCase
 {
-	function prepare()
+	function setUp()
 	{
 		$this->object = new Mockista\ClassGenerator;
 	}
@@ -47,6 +47,7 @@ class ClassGeneratorTest extends KDev_Test
 	{
 		$mock = Mockista\mock();
 		$mock->methods()->once->andReturn(array());
+		$mock->freeze();
 		return $mock;
 	}
         
@@ -67,7 +68,7 @@ class ClassGeneratorTest extends KDev_Test
 	}
 }
 ';
-		$this->object->setMethodFinder($this->mockNoMethods);
+		$this->object->setMethodFinder($this->mockNoMethods());
 		$this->assertEquals($emptyClass, $this->object->generate("ClassGeneratorTest_Empty", "ClassGeneratorTest_Empty_Generated"));
 	}
 
@@ -89,9 +90,8 @@ class A_B_ClassGeneratorTest_Empty_Generated implements ClassGeneratorTest_Empty
 	}
 }
 ';
-		$this->object->setMethodFinder($this->mockNoMethods);
+		$this->object->setMethodFinder($this->mockNoMethods());
 		$this->assertEquals($emptyClassWithNamespace, $this->object->generate("A\\B\\ClassGeneratorTest_Empty", "A_B_ClassGeneratorTest_Empty_Generated"));
-	
 	}
 
 	function testMethod()

@@ -2,7 +2,7 @@
 
 use Mockista\MethodInterface;
 
-class CleverAssertsTest extends KDev_Test
+class CleverAssertsTest extends PHPUnit_Framework_TestCase
 {
 	function testIExpect()
 	{

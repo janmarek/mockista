@@ -2,7 +2,6 @@
 
 namespace Mockista;
 
-require_once __DIR__ . "/Kdev_Test.php";
 require_once __DIR__ . "/Expect.php";
 
 function mock()
