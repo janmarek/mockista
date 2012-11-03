@@ -1,6 +1,4 @@
 <?php
-require_once dirname(__DIR__) . "/bootstrap.php";
-
 class LazyProxyGeneratorTest_Auxiliary_Lazy_Loaded_Class
 {
 	public static $constructorCalled = false;

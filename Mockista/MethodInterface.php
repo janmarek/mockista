@@ -2,12 +2,6 @@
 
 namespace Mockista;
 
-interface MockInterface
-{
-	public function freeze();
-	public function assertExpectations();
-}
-
 interface MethodInterface
 {
 	public function once();

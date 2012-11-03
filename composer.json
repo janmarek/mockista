@@ -8,5 +8,11 @@
 			"name": "Jiří Knesl",
 			"homepage": "http://www.knesl.com/"
 		}
-	]
+	],
+	"autoload": {
+		"psr-0": {
+			"Mockista": ""
+		},
+		"files": ["bootstrap.php"]
+	}
 }

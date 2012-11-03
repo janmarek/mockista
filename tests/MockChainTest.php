@@ -3,9 +3,6 @@
 
 use Mockista\MethodInterface;
 
-require_once dirname(__DIR__) . "/bootstrap.php";
-
-
 class MockChainTest extends KDev_Test
 {
 	function prepare()

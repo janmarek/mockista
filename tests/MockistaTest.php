@@ -2,8 +2,6 @@
 
 use Mockista\MethodInterface;
 
-require_once dirname(__DIR__) . "/bootstrap.php";
-
 class MockistaTestException extends Exception
 {
 }
