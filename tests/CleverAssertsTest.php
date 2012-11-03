@@ -1,8 +1,11 @@
 <?php
 
+namespace Mockista\Test;
+
+use Mockista;
 use Mockista\MethodInterface;
 
-class CleverAssertsTest extends PHPUnit_Framework_TestCase
+class CleverAssertsTest extends \PHPUnit_Framework_TestCase
 {
 	function testIExpect()
 	{
@@ -14,7 +17,7 @@ class CleverAssertsTest extends PHPUnit_Framework_TestCase
 		try {
 			$closure();
 			$this->fail("didn't throw");
-		} catch (PHPUnit_Framework_AssertionFailedError $e) {
+		} catch (\PHPUnit_Framework_AssertionFailedError $e) {
 			$this->assertTrue(true);
 		}
 	}

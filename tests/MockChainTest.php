@@ -1,9 +1,11 @@
-
 <?php
 
+namespace Mockista\Test;
+
+use Mockista;
 use Mockista\MethodInterface;
 
-class MockChainTest extends PHPUnit_Framework_TestCase
+class MockChainTest extends \PHPUnit_Framework_TestCase
 {
 	function setUp()
 	{

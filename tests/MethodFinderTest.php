@@ -1,34 +1,13 @@
 <?php
 
+namespace Mockista\Test;
+
+use Mockista;
 use Mockista\MethodInterface;
 
-interface MethodFinderTest_Dummy1234If2
-{
-}
+require __DIR__ . '/fixtures/methodFinder.php';
 
-interface MethodFinderTest_Dummy1234If1
-{
-}
-
-class MethodFinderTest_Dummy1234Parent implements MethodFinderTest_Dummy1234If1
-{
-	final function ab()
-	{
-	}
-}
-
-class MethodFinderTest_Dummy1234 extends MethodFinderTest_Dummy1234Parent implements MethodFinderTest_Dummy1234If2
-{
-	static function b(Array $c = array('a'))
-	{
-	}
-
-	function &c(Exception &$d = null)
-	{
-	}
-}
-
-class MethodFinderTest extends PHPUnit_Framework_TestCase
+class MethodFinderTest extends \PHPUnit_Framework_TestCase
 {
 	function setUp()
 	{

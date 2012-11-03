@@ -1,17 +1,17 @@
 <?php
 
+namespace Mockista\Test;
+
+use Mockista;
 use Mockista\MethodInterface;
 
-class MockistaTestException extends Exception
-{
-}
-
+require __DIR__ . '/fixtures/exception.php';
 
 /**
  *
  * @author Jiri Knesl
 **/
-class MockistaTest extends PHPUnit_Framework_TestCase
+class MockistaTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * @var Mockista
@@ -71,7 +71,7 @@ class MockistaTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testMethodThrow()
 	{
-		$this->object->abc()->andThrow(new MockistaTestException);
+		$this->object->abc()->andThrow(new \MockistaTestException);
 		$this->object->freeze();
 		$this->object->abc();
 	}
