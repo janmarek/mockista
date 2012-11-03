@@ -21,7 +21,6 @@ class ClassGeneratorTest extends \PHPUnit_Framework_TestCase
 		$mock->freeze();
 		return $mock;
 	}
-        
 
 	function testEmptyClass()
 	{
@@ -29,9 +28,9 @@ class ClassGeneratorTest extends \PHPUnit_Framework_TestCase
 {
 	public $mockista;
 
-        function __construct()
-        {
-        }
+	function __construct()
+	{
+	}
 
 	function __call($name, $args)
 	{
@@ -51,9 +50,9 @@ class A_B_ClassGeneratorTest_Empty_Generated implements ClassGeneratorTest_Empty
 {
 	public $mockista;
 
-        function __construct()
-        {
-        }
+	function __construct()
+	{
+	}
 
 	function __call($name, $args)
 	{
@@ -71,9 +70,9 @@ class A_B_ClassGeneratorTest_Empty_Generated implements ClassGeneratorTest_Empty
 {
 	public $mockista;
 
-        function __construct()
-        {
-        }
+	function __construct()
+	{
+	}
 
 	function __call($name, $args)
 	{
@@ -97,9 +96,9 @@ class A_B_ClassGeneratorTest_Empty_Generated implements ClassGeneratorTest_Empty
 {
 	public $mockista;
 
-        function __construct()
-        {
-        }
+	function __construct()
+	{
+	}
 
 	function __call($name, $args)
 	{
@@ -115,14 +114,14 @@ class A_B_ClassGeneratorTest_Empty_Generated implements ClassGeneratorTest_Empty
 		$this->object->setMethodFinder(new Mockista\MethodFinder);
 		$this->assertEquals($interfaceBasedClass, $this->object->generate("ClassGeneratorTest_Interface", "ClassGeneratorTest_Interface_Generated"));
 	}
-        
-        /**
-         * @expectedException Mockista\ClassGeneratorException
-         * @expectedExceptionCode 1 
-         */
-        function testGenerateThrowsExceptionOnFinalClass()
-        {
-            $this->object->setMethodFinder(new Mockista\MethodFinder);
-            $this->object->generate("ClassGeneratorTest_Final", "ClassGeneratorTest_Final_Generated");
-        }
+
+	/**
+	 * @expectedException Mockista\ClassGeneratorException
+	 * @expectedExceptionCode 1
+	 */
+	function testGenerateThrowsExceptionOnFinalClass()
+	{
+		$this->object->setMethodFinder(new Mockista\MethodFinder);
+		$this->object->generate("ClassGeneratorTest_Final", "ClassGeneratorTest_Final_Generated");
+	}
 }

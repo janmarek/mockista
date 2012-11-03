@@ -20,7 +20,7 @@ class MethodFinderTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue(array_key_exists("ab", $methods));
 		$this->assertTrue(array_key_exists("parameters", $methods['ab']));
 		$this->assertEquals(0, sizeof($methods['ab']['parameters']));
-                $this->assertEquals(true, $methods['ab']['final']);
+		$this->assertEquals(true, $methods['ab']['final']);
 		$this->assertFalse($methods['ab']['static']);
 	}
 

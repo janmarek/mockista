@@ -48,16 +48,16 @@ class MockistaTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(11, $this->object->abc());
 	}
 
-        public function testMethodReturnMultiple()
-        {
-            $this->object->abc()->andReturn(1, 2, 3);
-            $this->object->freeze();
-            $this->assertEquals(1, $this->object->abc());
-            $this->assertEquals(2, $this->object->abc());
-            $this->assertEquals(3, $this->object->abc());
-            $this->assertEquals(3, $this->object->abc());
-            $this->assertEquals(3, $this->object->abc());
-        }
+	public function testMethodReturnMultiple()
+	{
+		$this->object->abc()->andReturn(1, 2, 3);
+		$this->object->freeze();
+		$this->assertEquals(1, $this->object->abc());
+		$this->assertEquals(2, $this->object->abc());
+		$this->assertEquals(3, $this->object->abc());
+		$this->assertEquals(3, $this->object->abc());
+		$this->assertEquals(3, $this->object->abc());
+	}
 
 	public function testMethodCallback()
 	{
