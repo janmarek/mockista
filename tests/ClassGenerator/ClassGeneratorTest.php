@@ -1,10 +1,12 @@
 <?php
 
-namespace Mockista\Test;
+namespace Mockista\Test\ClassGenerator;
 
 use Mockista;
+use Mockista\ClassGenerator\MethodFinder;
+use Mockista\ClassGenerator\ClassGenerator;
 
-require __DIR__ . '/fixtures/classGenerator.php';
+require __DIR__ . '/../fixtures/classGenerator.php';
 
 class ClassGeneratorTest extends \PHPUnit_Framework_TestCase
 {
@@ -13,7 +15,7 @@ class ClassGeneratorTest extends \PHPUnit_Framework_TestCase
 
 	function setUp()
 	{
-		$this->object = new Mockista\ClassGenerator;
+		$this->object = new ClassGenerator();
 	}
 
 	function mockNoMethods()
@@ -87,7 +89,7 @@ class A_B_ClassGeneratorTest_Empty_Generated implements ClassGeneratorTest_Empty
 	}
 }
 ';
-		$this->object->setMethodFinder(new Mockista\MethodFinder);
+		$this->object->setMethodFinder(new MethodFinder());
 		$this->assertEquals($classIncludingMethod, $this->object->generate("ClassGeneratorTest_Method", "ClassGeneratorTest_Method_Generated"));
 	}
 
@@ -112,17 +114,17 @@ class A_B_ClassGeneratorTest_Empty_Generated implements ClassGeneratorTest_Empty
 	}
 }
 ';
-		$this->object->setMethodFinder(new Mockista\MethodFinder);
+		$this->object->setMethodFinder(new MethodFinder());
 		$this->assertEquals($interfaceBasedClass, $this->object->generate("ClassGeneratorTest_Interface", "ClassGeneratorTest_Interface_Generated"));
 	}
 
 	/**
-	 * @expectedException Mockista\ClassGeneratorException
+	 * @expectedException Mockista\ClassGenerator\ClassGeneratorException
 	 * @expectedExceptionCode 1
 	 */
 	function testGenerateThrowsExceptionOnFinalClass()
 	{
-		$this->object->setMethodFinder(new Mockista\MethodFinder);
+		$this->object->setMethodFinder(new MethodFinder());
 		$this->object->generate("ClassGeneratorTest_Final", "ClassGeneratorTest_Final_Generated");
 	}
 

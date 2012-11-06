@@ -1,17 +1,20 @@
 <?php
 
-namespace Mockista\Test;
+namespace Mockista\Test\ClassGenerator;
 
-use Mockista;
+use Mockista\ClassGenerator\MethodFinder;
 
-require __DIR__ . '/fixtures/methodFinder.php';
+require __DIR__ . '/../fixtures/methodFinder.php';
 
 class MethodFinderTest extends \PHPUnit_Framework_TestCase
 {
 
+	/** @var MethodFinder */
+	private $object;
+
 	function setUp()
 	{
-		$this->object = new Mockista\MethodFinder;
+		$this->object = new MethodFinder();
 	}
 
 	function testMethodAStaticNotStatic()
@@ -20,7 +23,7 @@ class MethodFinderTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue(array_key_exists("ab", $methods));
 		$this->assertTrue(array_key_exists("parameters", $methods['ab']));
 		$this->assertEquals(0, sizeof($methods['ab']['parameters']));
-		$this->assertEquals(true, $methods['ab']['final']);
+		$this->assertEquals(TRUE, $methods['ab']['final']);
 		$this->assertFalse($methods['ab']['static']);
 	}
 
@@ -39,7 +42,7 @@ class MethodFinderTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('Array', $methods['b']['parameters'][0]['typehint']);
 
 		$this->assertEquals('Exception', $methods['c']['parameters'][0]['typehint']);
-		$this->assertEquals(true, $methods['c']['parameters'][0]['passedByReference']);
+		$this->assertEquals(TRUE, $methods['c']['parameters'][0]['passedByReference']);
 		$this->assertTrue($methods['c']['passedByReference']);
 	}
 

@@ -2,6 +2,9 @@
 
 namespace Mockista;
 
+use Mockista\ClassGenerator\ClassGenerator;
+use Mockista\ClassGenerator\MethodFinder;
+
 class MockBuilder
 {
 
@@ -27,8 +30,8 @@ class MockBuilder
 	private function createMock($class)
 	{
 		if ($class) {
-			$classGenerator = new ClassGenerator;
-			$classGenerator->setMethodFinder(new MethodFinder);
+			$classGenerator = new ClassGenerator();
+			$classGenerator->setMethodFinder(new MethodFinder());
 
 			$newName = str_replace("\\", "_", $class) . '_' . uniqid();
 			$code = $classGenerator->generate($class, $newName);

@@ -1,6 +1,6 @@
 <?php
 
-namespace Mockista;
+namespace Mockista\ClassGenerator;
 
 class ClassGeneratorException extends \RuntimeException
 {

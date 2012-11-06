@@ -1,6 +1,6 @@
 <?php
 
-namespace Mockista;
+namespace Mockista\ClassGenerator;
 
 class ClassGenerator extends BaseClassGenerator
 {
