@@ -15,8 +15,7 @@ class MockChainTest extends \PHPUnit_Framework_TestCase
 	function mockD()
 	{
 		$mock = Mockista\mock();
-		$mock->d(11)->andReturn(true);
-		$mock->freeze();
+		$mock->expects('d', array(11))->andReturn(true);
 
 		return $mock;
 	}

@@ -56,7 +56,7 @@ class MockFactory
 	{
 		foreach ($defaults as $key => $default) {
 			if ($default instanceof \Closure) {
-				$mock->$key()->andCallback($default);
+				$mock->expects($key)->andCallback($default);
 			} else {
 				$mock->$key = $default;
 			}

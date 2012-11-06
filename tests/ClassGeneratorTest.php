@@ -19,8 +19,7 @@ class ClassGeneratorTest extends \PHPUnit_Framework_TestCase
 	function mockNoMethods()
 	{
 		$mock = Mockista\mock();
-		$mock->methods()->once->andReturn(array());
-		$mock->freeze();
+		$mock->expects('methods')->once->andReturn(array());
 
 		return $mock;
 	}

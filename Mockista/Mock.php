@@ -17,17 +17,22 @@ class Mock extends MockCommon implements MethodInterface
 		}
 	}
 
+	public function expects($name, $args = array())
+	{
+		$hash = $this->hashArgs($args);
+		$this->checkMethodsNamespace($name);
+		$this->__methods[$name][$hash] = new Mock($name, $args);
+
+		return $this->__methods[$name][$hash];
+	}
+
 	public function __call($name, $args)
 	{
 		$hash = $this->hashArgs($args);
 		$this->checkMethodsNamespace($name);
-		if (self::MODE_LEARNING == $this->__mode) {
-			$this->__methods[$name][$hash] = new Mock($name, $args);
-			return $this->__methods[$name][$hash];
-		} else if (self::MODE_COLLECTING == $this->__mode) {
-			$useHash = $this->useHash($name, $args, $hash);
-			return $this->__methods[$name][$useHash]->invoke($args);
-		}
+		$useHash = $this->useHash($name, $args, $hash);
+
+		return $this->__methods[$name][$useHash]->invoke($args);
 	}
 
 	public function invoke($args)

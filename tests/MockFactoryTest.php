@@ -21,7 +21,6 @@ class MockFactoryTest extends \PHPUnit_Framework_TestCase
 				return 2;
 			}
 		));
-		$obj->freeze();
 
 		return $obj;
 	}

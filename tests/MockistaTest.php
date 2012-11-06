@@ -8,13 +8,12 @@ use Mockista\MethodInterface;
 require __DIR__ . '/fixtures/exception.php';
 
 /**
- *
  * @author Jiri Knesl
-**/
+ */
 class MockistaTest extends \PHPUnit_Framework_TestCase
 {
 
-	/** @var Mockista */
+	/** @var \Mockista\Mock */
 	private $object;
 
 	protected function setUp()
@@ -30,21 +29,19 @@ class MockistaTest extends \PHPUnit_Framework_TestCase
 
 	public function testMethod()
 	{
-		$method = $this->object->abc();
+		$method = $this->object->expects('abc');
 		$this->assertTrue($method instanceof MethodInterface);
 	}
 
 	public function testMethodReturn()
 	{
-		$this->object->abc()->andReturn(11);
-		$this->object->freeze();
+		$this->object->expects('abc')->andReturn(11);
 		$this->assertEquals(11, $this->object->abc());
 	}
 
 	public function testMethodReturnMultiple()
 	{
-		$this->object->abc()->andReturn(1, 2, 3);
-		$this->object->freeze();
+		$this->object->expects('abc')->andReturn(1, 2, 3);
 		$this->assertEquals(1, $this->object->abc());
 		$this->assertEquals(2, $this->object->abc());
 		$this->assertEquals(3, $this->object->abc());
@@ -54,8 +51,9 @@ class MockistaTest extends \PHPUnit_Framework_TestCase
 
 	public function testMethodCallback()
 	{
-		$this->object->abc('aaa')->andCallback(function($name){return strtoupper($name);});
-		$this->object->freeze();
+		$this->object->expects('abc', array('aaa'))->andCallback(function ($name) {
+			return strtoupper($name);
+		});
 		$this->assertEquals('AAA', $this->object->abc('aaa'));
 	}
 	
@@ -64,8 +62,7 @@ class MockistaTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testMethodThrow()
 	{
-		$this->object->abc()->andThrow(new \MockistaTestException);
-		$this->object->freeze();
+		$this->object->expects('abc')->andThrow(new \MockistaTestException);
 		$this->object->abc();
 	}
 
@@ -75,15 +72,15 @@ class MockistaTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testCollectNever()
 	{
-		$this->object->abc()->never();
-		$this->object->freeze()->abc();
+		$this->object->expects('abc')->never();
+		$this->object->abc();
 		$this->object->assertExpectations();
 	}
 
 	public function testCollectExactly()
 	{
-		$this->object->abc()->exactly(3);
-		$this->object->freeze()->abc();
+		$this->object->expects('abc')->exactly(3);
+		$this->object->abc();
 		$this->object->abc();
 		$this->object->abc();
 		$this->object->assertExpectations();
@@ -95,14 +92,14 @@ class MockistaTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testCollectExactlyBad()
 	{
-		$this->object->abc()->exactly(2);
-		$this->object->freeze()->assertExpectations();
+		$this->object->expects('abc')->exactly(2);
+		$this->object->assertExpectations();
 	}
 
 	public function testCollectAtLeast()
 	{
-		$this->object->abc()->atLeast(2);
-		$this->object->freeze()->abc();
+		$this->object->expects('abc')->atLeast(2);
+		$this->object->abc();
 		$this->object->abc();
 		$this->object->abc();
 		$this->object->assertExpectations();
@@ -114,14 +111,14 @@ class MockistaTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testCollectAtLeastBad()
 	{
-		$this->object->abc()->atLeast(2);
-		$this->object->freeze()->assertExpectations();
+		$this->object->expects('abc')->atLeast(2);
+		$this->object->assertExpectations();
 	}
 
 	public function testCollectNoMoreThan()
 	{
-		$this->object->abc()->noMoreThan(3);
-		$this->object->freeze()->abc();
+		$this->object->expects('abc')->noMoreThan(3);
+		$this->object->abc();
 		$this->object->abc();
 		$this->object->abc();
 		$this->object->assertExpectations();
@@ -133,8 +130,8 @@ class MockistaTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testCollectNoMoreThanOnceAttribute()
 	{
-		$this->object->abc()->noMoreThanOnce;
-		$this->object->freeze()->abc();
+		$this->object->expects('abc')->noMoreThanOnce;
+		$this->object->abc();
 		$this->object->abc();
 		$this->object->assertExpectations();
 	}
@@ -145,8 +142,8 @@ class MockistaTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testCollectNoMoreThanBad()
 	{
-		$this->object->abc()->noMoreThan(2);
-		$this->object->freeze()->abc();
+		$this->object->expects('abc')->noMoreThan(2);
+		$this->object->abc();
 		$this->object->abc();
 		$this->object->abc();
 		$this->object->assertExpectations();
@@ -154,10 +151,9 @@ class MockistaTest extends \PHPUnit_Framework_TestCase
 
 	public function testMultipleCalls()
 	{
-		$this->object->abc(1)->andReturn(2);
-		$this->object->abc(2)->andReturn(3);
-		$this->object->abc()->andReturn(4);
-		$this->object->freeze();
+		$this->object->expects('abc', array(1))->andReturn(2);
+		$this->object->expects('abc', array(2))->andReturn(3);
+		$this->object->expects('abc')->andReturn(4);
 
 		$this->assertEquals(2, $this->object->abc(1));
 		$this->assertEquals(3, $this->object->abc(2));
@@ -173,7 +169,6 @@ class MockistaTest extends \PHPUnit_Framework_TestCase
 				return $a * 2;
 			}
 		));
-		$mock->freeze();
 		$this->assertEquals(11, $mock->x);
 		$this->assertEquals(4, $mock->y(2));
 	}

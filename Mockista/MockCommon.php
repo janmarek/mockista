@@ -4,9 +4,6 @@ namespace Mockista;
 
 class MockCommon
 {
-	const MODE_LEARNING = 1;
-	const MODE_COLLECTING = 2;
-
 	const CALL_TYPE_EXACTLY = 1;
 	const CALL_TYPE_AT_LEAST = 2;
 	const CALL_TYPE_NO_MORE_THAN = 3;
@@ -14,8 +11,6 @@ class MockCommon
 	const INVOKE_STRATEGY_RETURN = 1;
 	const INVOKE_STRATEGY_THROW = 2;
 	const INVOKE_STRATEGY_CALLBACK = 3;
-
-	protected $__mode = self::MODE_LEARNING;
 
 	protected $__methods = array();
 
@@ -213,19 +208,6 @@ class MockCommon
 	public function __get($name)
 	{
 		return $this->$name();
-	}
-
-	public function freeze()
-	{
-		$this->__mode = self::MODE_COLLECTING;
-
-		foreach ($this->__methods as $key1) {
-			foreach($key1 as $key2 => $mockObject) {
-				$mockObject->freeze();
-			}
-		}
-
-		return $this;
 	}
 
 }
