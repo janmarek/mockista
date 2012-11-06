@@ -3,12 +3,14 @@
 namespace Mockista\Test;
 
 use Mockista;
-use Mockista\MethodInterface;
 
 require __DIR__ . '/fixtures/classGenerator.php';
 
 class ClassGeneratorTest extends \PHPUnit_Framework_TestCase
 {
+
+	private $object;
+
 	function setUp()
 	{
 		$this->object = new Mockista\ClassGenerator;
@@ -19,6 +21,7 @@ class ClassGeneratorTest extends \PHPUnit_Framework_TestCase
 		$mock = Mockista\mock();
 		$mock->methods()->once->andReturn(array());
 		$mock->freeze();
+
 		return $mock;
 	}
 
@@ -87,7 +90,6 @@ class A_B_ClassGeneratorTest_Empty_Generated implements ClassGeneratorTest_Empty
 ';
 		$this->object->setMethodFinder(new Mockista\MethodFinder);
 		$this->assertEquals($classIncludingMethod, $this->object->generate("ClassGeneratorTest_Method", "ClassGeneratorTest_Method_Generated"));
-
 	}
 
 	function testInterface()
@@ -124,4 +126,5 @@ class A_B_ClassGeneratorTest_Empty_Generated implements ClassGeneratorTest_Empty
 		$this->object->setMethodFinder(new Mockista\MethodFinder);
 		$this->object->generate("ClassGeneratorTest_Final", "ClassGeneratorTest_Final_Generated");
 	}
+
 }

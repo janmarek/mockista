@@ -3,10 +3,10 @@
 namespace Mockista\Test;
 
 use Mockista;
-use Mockista\MethodInterface;
 
 class MockChainTest extends \PHPUnit_Framework_TestCase
 {
+
 	function setUp()
 	{
 		$this->object = new Mockista\MockChain;
@@ -17,6 +17,7 @@ class MockChainTest extends \PHPUnit_Framework_TestCase
 		$mock = Mockista\mock();
 		$mock->d(11)->andReturn(true);
 		$mock->freeze();
+
 		return $mock;
 	}
 
@@ -28,6 +29,7 @@ class MockChainTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue($ret);
 		$mock->assertExpectations();
 	}
+
 }
 
 

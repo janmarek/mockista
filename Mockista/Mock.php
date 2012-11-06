@@ -32,9 +32,10 @@ class Mock extends MockCommon implements MethodInterface
 
 	public function invoke($args)
 	{
+		$this->callCountReal++;
+
 		switch ($this->invokeStrategy) {
 			case self::INVOKE_STRATEGY_RETURN:
-				$this->callCountReal++;
 				$out = $this->invokeValues[$this->invokeIndex];
 				if ($this->invokeIndex < sizeof($this->invokeValues) - 1) {
 					$this->invokeIndex++;
@@ -42,19 +43,15 @@ class Mock extends MockCommon implements MethodInterface
 				return $out;
 				break;
 			case self::INVOKE_STRATEGY_THROW:
-				$this->callCountReal++;
 				throw $this->thrownException;
 				break;
 			case self::INVOKE_STRATEGY_CALLBACK:
-				$this->callCountReal++;
 				return call_user_func_array($this->calledCallback, $args);
-
 			default:
-				$this->callCountReal++;
 				if (isset($this->__methods[$this->name][$this->hashArgs($args)])) {
 					return $this->__methods[$this->name][$this->hashArgs($args)];
 				}
-				break;
 		}
 	}
+
 }

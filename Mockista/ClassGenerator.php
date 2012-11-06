@@ -4,6 +4,7 @@ namespace Mockista;
 
 class ClassGenerator extends BaseClassGenerator
 {
+
 	function generate($inheritedClass, $newName)
 	{
 		$extends = class_exists($inheritedClass) ? "extends" : "implements";
@@ -34,15 +35,17 @@ class ClassGenerator extends BaseClassGenerator
 			$out .= $this->generateMethod($name, $method);
 		}
 		$out .= "}\n";
+
 		return $out;
 	}
 
 	private function isFinal($inheritedClass)
 	{
-		if (! class_exists($inheritedClass)) {
+		if (!class_exists($inheritedClass)) {
 			return false;
 		}
 		$klass = new \ReflectionClass($inheritedClass);
+
 		return $klass->isFinal();
 	}
 
@@ -57,6 +60,7 @@ class ClassGenerator extends BaseClassGenerator
 		return call_user_func_array(array(\$this->mockista, '$methodName'), func_get_args());
 	}
 ";
+
 		return $out;
 	}
 

@@ -4,12 +4,11 @@ namespace Mockista;
 
 class MockFactory
 {
+
 	static function create()
 	{
 		list($class, $defaults) = self::parseArgs(func_get_args());
-
 		$mock = self::createMock($class);
-
 		$mock = self::fillDefaults($mock, $defaults);
 
 		return $mock;
@@ -19,7 +18,6 @@ class MockFactory
 	{
 		$defaults = array();
 		$class = false;
-		$constructorArgs = array();
 
 		if (1 == sizeof($args)) {
 			if (is_array($args[0])) {
@@ -31,6 +29,7 @@ class MockFactory
 			$class = $args[0];
 			$defaults = $args[1];
 		}
+
 		return array($class, $defaults);
 	}
 
@@ -44,7 +43,7 @@ class MockFactory
 			$code = $classGenerator->generate($class, $newName);
 
 			eval($code);
-			$mock = new $newName(null, null, null, null, null, null, null, null, null, null);
+			$mock = new $newName();
 			$mock->mockista = new Mock();
 		} else {
 			$mock = new Mock();
@@ -55,14 +54,14 @@ class MockFactory
 
 	private static function fillDefaults($mock, $defaults)
 	{
-
-		foreach ($defaults as $key=>$default) {
+		foreach ($defaults as $key => $default) {
 			if ($default instanceof \Closure) {
 				$mock->$key()->andCallback($default);
 			} else {
 				$mock->$key = $default;
 			}
 		}
+
 		return $mock;
 	}
 

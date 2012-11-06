@@ -13,22 +13,15 @@ require __DIR__ . '/fixtures/exception.php';
 **/
 class MockistaTest extends \PHPUnit_Framework_TestCase
 {
-	/**
-	 * @var Mockista
-	 */
+
+	/** @var Mockista */
 	private $object;
 
-	/**
-	 * 
-	 */
 	protected function setUp()
 	{
 		$this->object = Mockista\mock();
 	}
 
-	/**
-	 * 
-	 */
 	public function testAttribute()
 	{
 		$this->object->abc = 11;
@@ -134,7 +127,6 @@ class MockistaTest extends \PHPUnit_Framework_TestCase
 		$this->object->assertExpectations();
 	}
 
-
 	/**
 	 * @expectedException Mockista\MockException
 	 * @expectedExceptionCode 3
@@ -175,7 +167,12 @@ class MockistaTest extends \PHPUnit_Framework_TestCase
 
 	public function testMockArgs()
 	{
-		$mock = Mockista\mock(array("x"=>11, "y"=>function($a){return $a * 2;}));
+		$mock = Mockista\mock(array(
+			"x" => 11,
+			"y" => function ($a) {
+				return $a * 2;
+			}
+		));
 		$mock->freeze();
 		$this->assertEquals(11, $mock->x);
 		$this->assertEquals(4, $mock->y(2));
@@ -194,4 +191,5 @@ class MockistaTest extends \PHPUnit_Framework_TestCase
 		// $this->assertEquals(11, $mock->a()->c('11'));
 		// $this->assertEquals(12, $mock->a('b')->c('b'));
 	}
+
 }

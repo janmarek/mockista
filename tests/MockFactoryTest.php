@@ -2,12 +2,11 @@
 
 namespace Mockista\Test;
 
-use Mockista\MethodInterface;
-
 require __DIR__ . '/fixtures/factory.php';
 
 class MockFactoryTest extends \PHPUnit_Framework_TestCase
 {
+
 	function testGenerateClass()
 	{
 		$obj = \Mockista\mock("Mockista\\MockFactoryTest_Generated");
@@ -16,8 +15,14 @@ class MockFactoryTest extends \PHPUnit_Framework_TestCase
 
 	function mockMethods()
 	{
-		$obj = \Mockista\mock("Mockista\\MockFactoryTest_Generated", array('x'=>1, 'y'=>function(){return 2;}));
+		$obj = \Mockista\mock("Mockista\\MockFactoryTest_Generated", array(
+			'x' => 1,
+			'y' => function () {
+				return 2;
+			}
+		));
 		$obj->freeze();
+
 		return $obj;
 	}
 
@@ -28,5 +33,6 @@ class MockFactoryTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(1, $obj->x);
 		$this->assertEquals(2, $obj->y());
 	}
+
 }
 

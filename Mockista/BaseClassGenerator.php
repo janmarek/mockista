@@ -4,6 +4,7 @@ namespace Mockista;
 
 abstract class BaseClassGenerator
 {
+
 	protected $methodFinder;
 
 	public function setMethodFinder($methodFinder)
@@ -14,8 +15,8 @@ abstract class BaseClassGenerator
 	protected function generateParams($params)
 	{
 		$out = array();
-		foreach ($params as $param) {
 
+		foreach ($params as $param) {
 			if ($param['typehint']) {
 				$outArr = $param['typehint'] . ' ';
 			} else {
@@ -34,6 +35,7 @@ abstract class BaseClassGenerator
 			}
 			$out[] = $outArr;
 		}
+
 		return join(', ', $out);
 	}
 
@@ -59,6 +61,8 @@ abstract class BaseClassGenerator
 			$out .= "use {$inheritedClass};\n\n";
 			$inheritedClass = $this->removeNameSpace($inheritedClass);
 		}
+
 		return array($out, $inheritedClass);
 	}
+
 }

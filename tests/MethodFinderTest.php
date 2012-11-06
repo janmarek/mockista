@@ -3,12 +3,12 @@
 namespace Mockista\Test;
 
 use Mockista;
-use Mockista\MethodInterface;
 
 require __DIR__ . '/fixtures/methodFinder.php';
 
 class MethodFinderTest extends \PHPUnit_Framework_TestCase
 {
+
 	function setUp()
 	{
 		$this->object = new Mockista\MethodFinder;
@@ -42,4 +42,5 @@ class MethodFinderTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(true, $methods['c']['parameters'][0]['passedByReference']);
 		$this->assertTrue($methods['c']['passedByReference']);
 	}
+
 }

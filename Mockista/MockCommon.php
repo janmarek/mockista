@@ -22,12 +22,17 @@ class MockCommon
 	protected $args;
 
 	protected $callType;
+
 	protected $callCount;
 
 	protected $invokeStrategy;
+
 	protected $thrownException;
+
 	protected $calledCallback;
+
 	protected $invokeValues = array();
+
 	protected $invokeIndex = 0;
 
 	protected $name = '';
@@ -52,24 +57,19 @@ class MockCommon
 				$message = "Expected {$this->name} {$this->callCount} and called {$this->callCountReal}";
 				$code = MockException::CODE_EXACTLY;
 				break;
-
 			case self::CALL_TYPE_AT_LEAST:
 				$passed = $this->callCount <= $this->callCountReal;
 				$message = "Expected {$this->name} at least {$this->callCount} and called {$this->callCountReal}";
 				$code = MockException::CODE_AT_LEAST;
 				break;
-
 			case self::CALL_TYPE_NO_MORE_THAN:
 				$passed = $this->callCount >= $this->callCountReal;
 				$message = "Expected {$this->name} no more than {$this->callCount} and called {$this->callCountReal}";
 				$code = MockException::CODE_NO_MORE_THAN;
 				break;
-
-			default:
-				break;
 		}
 
-		if (! $passed) {
+		if (!$passed) {
 			throw new MockException($message, $code);
 		}
 	}
@@ -77,6 +77,7 @@ class MockCommon
 	public function assertExpectations()
 	{
 		$this->assertExpectationsOnMyself();
+
 		foreach ($this->__methods as $method) {
 			foreach ($method as $argCombinationMethod) {
 				$argCombinationMethod->assertExpectations();
@@ -86,7 +87,7 @@ class MockCommon
 
 	protected function checkMethodsNamespace($name)
 	{
-		if (! isset($this->__methods[$name])) {
+		if (!isset($this->__methods[$name])) {
 			$this->__methods[$name] = array();
 		}
 	}
@@ -97,12 +98,15 @@ class MockCommon
 			return 0;
 		} else {
 			$hash = "";
+
 			foreach ($args as $arg) {
 				$hash .= $this->hashArg($arg);
 			}
+
 			return md5($hash);
 		}
 	}
+
 	protected function hashArg($arg) {
 		if (is_object($arg)) {
 			return spl_object_hash($arg);
@@ -115,11 +119,11 @@ class MockCommon
 		}
 	}
 
-
 	public function once()
 	{
 		$this->callType = self::CALL_TYPE_EXACTLY;
 		$this->callCount = 1;
+
 		return $this;
 	}
 
@@ -127,6 +131,7 @@ class MockCommon
 	{
 		$this->callType = self::CALL_TYPE_EXACTLY;
 		$this->callCount = 2;
+
 		return $this;
 	}
 
@@ -134,6 +139,7 @@ class MockCommon
 	{
 		$this->callType = self::CALL_TYPE_EXACTLY;
 		$this->callCount = 0;
+
 		return $this;
 	}
 
@@ -141,6 +147,7 @@ class MockCommon
 	{
 		$this->callType = self::CALL_TYPE_EXACTLY;
 		$this->callCount = $count;
+
 		return $this;
 	}
 
@@ -149,6 +156,7 @@ class MockCommon
 	{
 		$this->callType = self::CALL_TYPE_AT_LEAST;
 		$this->callCount = 1;
+
 		return $this;
 	}
 
@@ -156,6 +164,7 @@ class MockCommon
 	{
 		$this->callType = self::CALL_TYPE_AT_LEAST;
 		$this->callCount = $count;
+
 		return $this;
 	}
 
@@ -163,6 +172,7 @@ class MockCommon
 	{
 		$this->callType = self::CALL_TYPE_NO_MORE_THAN;
 		$this->callCount = 1;
+
 		return $this;
 	}
 
@@ -170,6 +180,7 @@ class MockCommon
 	{
 		$this->callType = self::CALL_TYPE_NO_MORE_THAN;
 		$this->callCount = $count;
+
 		return $this;
 
 	}
@@ -179,6 +190,7 @@ class MockCommon
 		$this->invokeStrategy = self::INVOKE_STRATEGY_RETURN;
 		$this->invokeValues = func_get_args();
 		$this->invokeIndex = 0;
+
 		return $this;
 	}
 
@@ -186,6 +198,7 @@ class MockCommon
 	{
 		$this->invokeStrategy = self::INVOKE_STRATEGY_THROW;
 		$this->thrownException = $throwException;
+
 		return $this;
 	}
 
@@ -193,6 +206,7 @@ class MockCommon
 	{
 		$this->invokeStrategy = self::INVOKE_STRATEGY_CALLBACK;
 		$this->calledCallback = $callback;
+
 		return $this;
 	}
 
@@ -204,11 +218,13 @@ class MockCommon
 	public function freeze()
 	{
 		$this->__mode = self::MODE_COLLECTING;
+
 		foreach ($this->__methods as $key1) {
-			foreach($key1 as $key2=>$mockObject) {
+			foreach($key1 as $key2 => $mockObject) {
 				$mockObject->freeze();
 			}
 		}
+
 		return $this;
 	}
 
