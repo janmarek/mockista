@@ -2,7 +2,9 @@
 
 namespace Mockista;
 
-function mock()
+function mock($class = NULL, array $defaults = array())
 {
-	return call_user_func_array(array("Mockista\MockFactory", "create"), func_get_args());
+	$builder = new MockBuilder($class, $defaults);
+
+	return $builder->getMock();
 }
