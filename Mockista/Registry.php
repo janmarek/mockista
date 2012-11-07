@@ -13,9 +13,9 @@ class Registry
 	 * @param array $methods
 	 * @return MockInterface
 	 */
-	public function createMock($class = NULL, array $methods = array())
+	public function create($class = NULL, array $methods = array())
 	{
-		return $this->createMockBuilder($class, $methods)->getMock();
+		return $this->createBuilder($class, $methods)->getMock();
 	}
 
 	/**
@@ -23,7 +23,7 @@ class Registry
 	 * @param array $methods
 	 * @return MockBuilder
 	 */
-	public function createMockBuilder($class = NULL, array $methods = array())
+	public function createBuilder($class = NULL, array $methods = array())
 	{
 		$builder = new MockBuilder($class, $methods);
 		$this->mocks[] = $builder->getMock();

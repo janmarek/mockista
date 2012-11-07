@@ -19,7 +19,7 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 	 */
 	function testAssertExpectations()
 	{
-		$mock1 = $this->object->createMock();
+		$mock1 = $this->object->create();
 		$mock1->expects('abc')->twice();
 		$this->object->assertExpectations();
 	}
