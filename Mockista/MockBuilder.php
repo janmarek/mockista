@@ -54,7 +54,7 @@ class MockBuilder
 			if ($default instanceof \Closure) {
 				$this->mock->expects($key)->andCallback($default);
 			} else {
-				$this->mock->$key = $default;
+				$this->mock->expects($key)->andReturn($default);
 			}
 		}
 	}

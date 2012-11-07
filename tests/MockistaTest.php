@@ -169,22 +169,8 @@ class MockistaTest extends \PHPUnit_Framework_TestCase
 				return $a * 2;
 			}
 		));
-		$this->assertEquals(11, $mock->x);
+		$this->assertEquals(11, $mock->x());
 		$this->assertEquals(4, $mock->y(2));
-	}
-	
-	public function testMockMethodChain()
-	{
-		//$mock = Mockista\mock();
-		//$mock->a()->b()->andReturn(11);
-		//$mock->a()->c('a')->andReturn(11);
-		//$mock->a('b')->c('b')->andReturn(12);
-
-		//$mock->freeze();
-
-		//$this->assertEquals(11, $mock->a()->b());
-		// $this->assertEquals(11, $mock->a()->c('11'));
-		// $this->assertEquals(12, $mock->a('b')->c('b'));
 	}
 
 }

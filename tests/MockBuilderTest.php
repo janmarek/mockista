@@ -14,16 +14,16 @@ class MockBuilderTest extends \PHPUnit_Framework_TestCase
 		$builder = new MockBuilder();
 		$builder->addMethods(array(
 			'x' => 1,
-			'y' => function () {
-				return 2;
+			'y' => function ($a) {
+				return $a * 2;
 			}
 		));
 
 		$mock = $builder->getMock();
 
 		$this->assertTrue($mock instanceof \Mockista\Mock);
-		$this->assertEquals(1, $mock->x);
-		$this->assertEquals(2, $mock->y());
+		$this->assertEquals(1, $mock->x());
+		$this->assertEquals(4, $mock->y(2));
 	}
 
 	function testGenerateClass()
@@ -48,7 +48,7 @@ class MockBuilderTest extends \PHPUnit_Framework_TestCase
 		));
 
 		$this->assertInstanceOf('\Mockista\MockFactoryTest_Generated', $mock);
-		$this->assertEquals(1, $mock->x);
+		$this->assertEquals(1, $mock->x(1, 2, 3));
 		$this->assertEquals(2, $mock->y());
 	}
 
