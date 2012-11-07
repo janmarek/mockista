@@ -8,7 +8,7 @@ interface MethodInterface
 	/**
 	 * @return MethodInterface
 	 */
-	public function withArgs();
+	public function with();
 
 	/**
 	 * @return MethodInterface

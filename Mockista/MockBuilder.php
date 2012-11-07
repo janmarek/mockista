@@ -25,7 +25,7 @@ class MockBuilder
 	public function __call($methodName, array $args = array())
 	{
 		$method = $this->mock->expects($methodName);
-		call_user_func_array(array($method, 'withArgs'), $args);
+		call_user_func_array(array($method, 'with'), $args);
 		return $method;
 	}
 

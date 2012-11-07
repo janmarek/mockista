@@ -45,7 +45,7 @@ class Method implements MethodInterface
 		return $this->$name();
 	}
 
-	public function withArgs()
+	public function with()
 	{
 		$this->args = $this->argsMatcher->serializeArgs(func_get_args());
 

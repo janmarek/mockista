@@ -47,7 +47,7 @@ class SomeTestCase extends BaseTestCase
 
 		$this->mock1 = $this->mockista->create();
 		$this->mock1->expects('method')->andReturn(5);
-		$this->mock1->expects('method')->once()->withArgs(1, 2, 3)->andReturn(4);
+		$this->mock1->expects('method')->once()->with(1, 2, 3)->andReturn(4);
 
 		// or you can use mock builder with nicer syntax
 		$builder = $this->mockista->createBuilder();
