@@ -3,6 +3,7 @@
 namespace Mockista\Test;
 
 use Mockista;
+use Mockista\MockBuilder;
 use Mockista\MethodInterface;
 
 require __DIR__ . '/fixtures/exception.php';
@@ -171,6 +172,17 @@ class MockistaTest extends \PHPUnit_Framework_TestCase
 		));
 		$this->assertEquals(11, $mock->x());
 		$this->assertEquals(4, $mock->y(2));
+	}
+
+	public function testNotDefinedArgs()
+	{
+		$builder = new MockBuilder();
+		$builder->abc()->andReturn(1);
+		$builder->abc()->withArgs(array())->andReturn(2);
+		$mock = $builder->getMock();
+
+		$this->assertEquals(1, $mock->abc());
+		$this->assertEquals(2, $mock->abc(array()));
 	}
 
 }
