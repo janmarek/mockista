@@ -51,7 +51,7 @@ class MockistaTest extends \PHPUnit_Framework_TestCase
 
 	public function testMethodCallback()
 	{
-		$this->object->expects('abc', array('aaa'))->andCallback(function ($name) {
+		$this->object->expects('abc')->withArgs('aaa')->andCallback(function ($name) {
 			return strtoupper($name);
 		});
 		$this->assertEquals('AAA', $this->object->abc('aaa'));
@@ -151,8 +151,8 @@ class MockistaTest extends \PHPUnit_Framework_TestCase
 
 	public function testMultipleCalls()
 	{
-		$this->object->expects('abc', array(1))->andReturn(2);
-		$this->object->expects('abc', array(2))->andReturn(3);
+		$this->object->expects('abc')->withArgs(1)->andReturn(2);
+		$this->object->expects('abc')->withArgs(2)->andReturn(3);
 		$this->object->expects('abc')->andReturn(4);
 
 		$this->assertEquals(2, $this->object->abc(1));

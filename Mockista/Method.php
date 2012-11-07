@@ -2,8 +2,9 @@
 
 namespace Mockista;
 
-class MockCommon
+class Method implements MethodInterface
 {
+
 	const CALL_TYPE_EXACTLY = 1;
 	const CALL_TYPE_AT_LEAST = 2;
 	const CALL_TYPE_NO_MORE_THAN = 3;
@@ -12,9 +13,7 @@ class MockCommon
 	const INVOKE_STRATEGY_THROW = 2;
 	const INVOKE_STRATEGY_CALLBACK = 3;
 
-	protected $__methods = array();
-
-	protected $args;
+	protected $args = NULL;
 
 	protected $callType;
 
@@ -34,84 +33,33 @@ class MockCommon
 
 	protected $callCountReal = 0;
 
-	public function __construct($name = "", $args = array())
+	private $argsMatcher;
+
+	public function __construct(ArgsMatcher $argsMatcher)
 	{
-		$this->name = $name;
-		$this->args = $args;
+		$this->argsMatcher = $argsMatcher;
 	}
 
-	public function assertExpectationsOnMyself()
+	public function __get($name)
 	{
-		$passed = true;
-		$message = "";
-		$code = 0;
-
-		switch ($this->callType) {
-			case self::CALL_TYPE_EXACTLY:
-				$passed = $this->callCount == $this->callCountReal;
-				$message = "Expected {$this->name} {$this->callCount} and called {$this->callCountReal}";
-				$code = MockException::CODE_EXACTLY;
-				break;
-			case self::CALL_TYPE_AT_LEAST:
-				$passed = $this->callCount <= $this->callCountReal;
-				$message = "Expected {$this->name} at least {$this->callCount} and called {$this->callCountReal}";
-				$code = MockException::CODE_AT_LEAST;
-				break;
-			case self::CALL_TYPE_NO_MORE_THAN:
-				$passed = $this->callCount >= $this->callCountReal;
-				$message = "Expected {$this->name} no more than {$this->callCount} and called {$this->callCountReal}";
-				$code = MockException::CODE_NO_MORE_THAN;
-				break;
-		}
-
-		if (!$passed) {
-			throw new MockException($message, $code);
-		}
+		return $this->$name();
 	}
 
-	public function assertExpectations()
+	public function withArgs()
 	{
-		$this->assertExpectationsOnMyself();
+		$this->args = $this->argsMatcher->serializeArgs(func_get_args());
 
-		foreach ($this->__methods as $method) {
-			foreach ($method as $argCombinationMethod) {
-				$argCombinationMethod->assertExpectations();
-			}
-		}
+		return $this;
 	}
 
-	protected function checkMethodsNamespace($name)
+	public function matchArgs($arguments)
 	{
-		if (!isset($this->__methods[$name])) {
-			$this->__methods[$name] = array();
-		}
+		return $this->argsMatcher->serializeArgs($arguments) === $this->args;
 	}
 
-	protected function hashArgs($args)
+	public function hasArgs()
 	{
-		if (array() == $args) {
-			return 0;
-		} else {
-			$hash = "";
-
-			foreach ($args as $arg) {
-				$hash .= $this->hashArg($arg);
-			}
-
-			return md5($hash);
-		}
-	}
-
-	protected function hashArg($arg) {
-		if (is_object($arg)) {
-			return spl_object_hash($arg);
-		} else {
-			try {
-				return md5(serialize($arg));
-			} catch (\Exception $e) {
-				return md5(serialize(var_export($arg, TRUE)));
-			}
-		}
+		return $this->args !== NULL;
 	}
 
 	public function once()
@@ -205,9 +153,53 @@ class MockCommon
 		return $this;
 	}
 
-	public function __get($name)
+	public function invoke($args)
 	{
-		return $this->$name();
+		$this->callCountReal++;
+
+		switch ($this->invokeStrategy) {
+			case self::INVOKE_STRATEGY_RETURN:
+				$out = $this->invokeValues[$this->invokeIndex];
+				if ($this->invokeIndex < sizeof($this->invokeValues) - 1) {
+					$this->invokeIndex++;
+				}
+				return $out;
+				break;
+			case self::INVOKE_STRATEGY_THROW:
+				throw $this->thrownException;
+				break;
+			case self::INVOKE_STRATEGY_CALLBACK:
+				return call_user_func_array($this->calledCallback, $args);
+		}
+	}
+
+	public function assertExpectations()
+	{
+		$passed = TRUE;
+		$message = "";
+		$code = 0;
+
+		switch ($this->callType) {
+			case self::CALL_TYPE_EXACTLY:
+				$passed = $this->callCount == $this->callCountReal;
+				$message = "Expected {$this->name} {$this->callCount} and called {$this->callCountReal}";
+				$code = MockException::CODE_EXACTLY;
+				break;
+			case self::CALL_TYPE_AT_LEAST:
+				$passed = $this->callCount <= $this->callCountReal;
+				$message = "Expected {$this->name} at least {$this->callCount} and called {$this->callCountReal}";
+				$code = MockException::CODE_AT_LEAST;
+				break;
+			case self::CALL_TYPE_NO_MORE_THAN:
+				$passed = $this->callCount >= $this->callCountReal;
+				$message = "Expected {$this->name} no more than {$this->callCount} and called {$this->callCountReal}";
+				$code = MockException::CODE_NO_MORE_THAN;
+				break;
+		}
+
+		if (!$passed) {
+			throw new MockException($message, $code);
+		}
 	}
 
 }

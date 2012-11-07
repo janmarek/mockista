@@ -5,7 +5,11 @@ namespace Mockista;
 interface MockInterface
 {
 
-	public function freeze();
+	/**
+	 * @param string $methodName
+	 * @return MethodInterface
+	 */
+	public function expects($methodName);
 
 	public function assertExpectations();
 

@@ -55,8 +55,9 @@ class MockBuilderTest extends \PHPUnit_Framework_TestCase
 	function testMagicCallMethodRegistering()
 	{
 		$builder = new MockBuilder();
-		$builder->abc()->andReturn(2);
-		$this->assertEquals(2, $builder->getMock()->abc());
+		$builder->abc(1)->andReturn(2);
+		$builder->abc(3)->andReturn(4);
+		$this->assertEquals(2, $builder->getMock()->abc(1));
 	}
 
 }

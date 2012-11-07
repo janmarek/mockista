@@ -24,7 +24,9 @@ class MockBuilder
 
 	public function __call($methodName, array $args = array())
 	{
-		return $this->mock->expects($methodName, $args);
+		$method = $this->mock->expects($methodName);
+		call_user_func_array(array($method, 'withArgs'), $args);
+		return $method;
 	}
 
 	private function createMock($class)
