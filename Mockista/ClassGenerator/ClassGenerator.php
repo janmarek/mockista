@@ -25,7 +25,8 @@ class ClassGenerator extends BaseClassGenerator
 
 	function __call($name, $args)
 	{
-		return call_user_func_array(array($this->mockista, $name), $args);
+		$l = call_user_func_array(array($this->mockista, $name), $args);
+		return $l;
 	}
 ';
 		foreach ($methods as $name => $method) {
@@ -57,7 +58,8 @@ class ClassGenerator extends BaseClassGenerator
 		$out = "
 	{$static}function $passedByReference$methodName($params)
 	{
-		return call_user_func_array(array(\$this->mockista, '$methodName'), func_get_args());
+		\$l = call_user_func_array(array(\$this->mockista, '$methodName'), func_get_args());
+		return \$l;
 	}
 ";
 
