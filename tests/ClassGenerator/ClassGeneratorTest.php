@@ -91,6 +91,10 @@ class A_B_ClassGeneratorTest_Empty_Generated implements ClassGeneratorTest_Empty
 		$l = call_user_func_array(array($this->mockista, \'abc\'), func_get_args());
 		return $l;
 	}
+
+	function __destruct()
+	{
+	}
 }
 ';
 		$this->object->setMethodFinder(new MethodFinder());

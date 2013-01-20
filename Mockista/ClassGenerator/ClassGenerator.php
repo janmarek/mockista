@@ -33,6 +33,13 @@ class ClassGenerator extends BaseClassGenerator
 			if ("__call" == $name || "__construct" == $name || $method['final']) {
 				continue;
 			}
+			if ("__destruct" == $name) {
+				$out .= '
+	function __destruct()
+	{
+	}
+'; 			continue;
+			}
 			$out .= $this->generateMethod($name, $method);
 		}
 		$out .= "}\n";
