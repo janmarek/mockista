@@ -23,7 +23,10 @@ class ClassGeneratorTest_Method
 
 	final function finalMethod()
 	{
+	}
 
+	function __destruct()
+	{
 	}
 }
 
