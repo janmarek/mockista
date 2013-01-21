@@ -60,5 +60,10 @@ class MockBuilderTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(2, $builder->getMock()->abc(1));
 	}
 
+	function testMockedClassHasName() {
+		$builder = new MockBuilder('Mockista\A');
+		$mock = $builder->getMock();
+		$this->assertEquals('Mockista\A', $mock->mockista->mockName);
+	}
 }
 

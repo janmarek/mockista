@@ -9,6 +9,8 @@ class Mock implements MockInterface
 
 	private $argsMatcher;
 
+	public $mockName = NULL;
+
 	public function __construct()
 	{
 		$this->argsMatcher = new ArgsMatcher();
