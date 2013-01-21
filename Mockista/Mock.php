@@ -64,6 +64,8 @@ class Mock implements MockInterface
 	{
 		$this->checkMethodsNamespace($name);
 		$method = new Method($this->argsMatcher);
+		$method->owningMock = $this;
+		$method->name = $name;
 		$this->methods[$name][] = $method;
 		return $method;
 	}

@@ -13,6 +13,10 @@ class Method implements MethodInterface
 	const INVOKE_STRATEGY_THROW = 2;
 	const INVOKE_STRATEGY_CALLBACK = 3;
 
+	public $owningMock = NULL;
+
+	public $name = '';
+
 	protected $args = NULL;
 
 	protected $callType;
@@ -28,8 +32,6 @@ class Method implements MethodInterface
 	protected $invokeValues = array();
 
 	protected $invokeIndex = 0;
-
-	protected $name = '';
 
 	protected $callCountReal = 0;
 

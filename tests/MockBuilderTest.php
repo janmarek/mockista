@@ -65,5 +65,14 @@ class MockBuilderTest extends \PHPUnit_Framework_TestCase
 		$mock = $builder->getMock();
 		$this->assertEquals('Mockista\A', $mock->mockista->mockName);
 	}
+
+	function testMockedMethodHasOwningMockAndName() {
+		$builder = new MockBuilder('Mockista\A');
+		$method = $builder->mockme();
+		$mock = $builder->getMock();
+		$this->assertEquals($mock->mockista, $method->owningMock);
+		$this->assertEquals('mockme', $method->name);
+	}
+
 }
 
