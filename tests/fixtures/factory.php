@@ -14,3 +14,7 @@ class MockFactoryTest_Generated
 		return 4;
 	}
 }
+
+class A {
+	public function mockMe() {}
+}
