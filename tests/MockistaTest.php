@@ -57,7 +57,7 @@ class MockistaTest extends \PHPUnit_Framework_TestCase
 		});
 		$this->assertEquals('AAA', $this->object->abc('aaa'));
 	}
-	
+
 	/**
 	 * @expectedException MockistaTestException
 	 */
@@ -70,6 +70,7 @@ class MockistaTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * @expectedException Mockista\MockException
 	 * @expectedExceptionCode 1
+	 * @expectedExceptionMessage Expected method unnamed::abc() should never be called but called once.
 	 */
 	public function testCollectNever()
 	{
@@ -90,6 +91,7 @@ class MockistaTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * @expectedException Mockista\MockException
 	 * @expectedExceptionCode 1
+	 * @expectedExceptionMessage Expected method unnamed::abc() should be called exactly twice but not called at all.
 	 */
 	public function testCollectExactlyBad()
 	{
@@ -109,6 +111,7 @@ class MockistaTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * @expectedException Mockista\MockException
 	 * @expectedExceptionCode 2
+	 * @expectedExceptionMessage Expected method unnamed::abc() should be called at least twice but not called at all.
 	 */
 	public function testCollectAtLeastBad()
 	{
@@ -128,6 +131,7 @@ class MockistaTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * @expectedException Mockista\MockException
 	 * @expectedExceptionCode 3
+	 * @expectedExceptionMessage Expected method unnamed::abc() should be called no more than once but called twice.
 	 */
 	public function testCollectNoMoreThanOnceAttribute()
 	{
@@ -140,6 +144,7 @@ class MockistaTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * @expectedException Mockista\MockException
 	 * @expectedExceptionCode 3
+	 * @expectedExceptionMessage Expected method unnamed::abc() should be called no more than twice but called 3 times.
 	 */
 	public function testCollectNoMoreThanBad()
 	{

@@ -181,26 +181,62 @@ class Method implements MethodInterface
 		$message = "";
 		$code = 0;
 
+		$mockName = $this->owningMock->mockName;
+		if (empty($mockName)) {
+			$mockName = 'unnamed';
+		}
+
+		$funcName = "{$mockName}::{$this->name}()";
+		$butMessage = $this->calledTimes($this->callCountReal);
+
 		switch ($this->callType) {
+
 			case self::CALL_TYPE_EXACTLY:
 				$passed = $this->callCount == $this->callCountReal;
-				$message = "Expected {$this->name} {$this->callCount} and called {$this->callCountReal}";
+				$message = "Expected method {$funcName} " . $this->expectedTimes($this->callCount, 'exactly ');
 				$code = MockException::CODE_EXACTLY;
 				break;
 			case self::CALL_TYPE_AT_LEAST:
 				$passed = $this->callCount <= $this->callCountReal;
-				$message = "Expected {$this->name} at least {$this->callCount} and called {$this->callCountReal}";
+				$message = "Expected method {$funcName} " . $this->expectedTimes($this->callCount, 'at least ');
 				$code = MockException::CODE_AT_LEAST;
 				break;
 			case self::CALL_TYPE_NO_MORE_THAN:
 				$passed = $this->callCount >= $this->callCountReal;
-				$message = "Expected {$this->name} no more than {$this->callCount} and called {$this->callCountReal}";
+				$message = "Expected method {$funcName} " . $this->expectedTimes($this->callCount, 'no more than ');
 				$code = MockException::CODE_NO_MORE_THAN;
 				break;
 		}
 
 		if (!$passed) {
+			$message = "{$message} but {$butMessage}.";
 			throw new MockException($message, $code);
+		}
+	}
+
+	private function calledTimes($n) {
+		switch ($n) {
+			case 0:
+				return 'not called at all';
+			case 1:
+				return 'called once';
+			case 2:
+				return 'called twice';
+			default:
+				return "called {$n} times";
+		}
+	}
+
+	private function expectedTimes($n, $modif = '') {
+		switch ($n) {
+			case 0:
+				return 'should never be called';
+			case 1:
+				return "should be called {$modif}once";
+			case 2:
+				return "should be called {$modif}twice";
+			default:
+				return "should be called {$modif}{$n} times";
 		}
 	}
 
