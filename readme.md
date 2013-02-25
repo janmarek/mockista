@@ -1,4 +1,4 @@
-## Installation
+## Installation [![Build Status](https://secure.travis-ci.org/janmarek/mockista.png?branch=master)](http://travis-ci.org/janmarek/mockista)
 
 Install via composer:
 
