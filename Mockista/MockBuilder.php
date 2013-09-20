@@ -11,15 +11,25 @@ class MockBuilder
 	/** @var Mock */
 	private $mock;
 
-	public function __construct($className = NULL, array $defaults = array())
+	/** @var ArgsMatcher */
+	private $argsMatcher;
+
+	public function __construct($className = NULL, array $defaults = array(), ArgsMatcher $argsMatcher = NULL)
 	{
 		if (is_array($className)) {
 			$defaults = $className;
 			$className = NULL;
 		}
 
+		$this->argsMatcher = $argsMatcher;
+
 		$this->mock = $this->createMock($className);
 		$this->addMethods($defaults);
+	}
+
+	public function setArgsMatcher(ArgsMatcher $argsMatcher = NULL)
+	{
+		$this->argsMatcher = $argsMatcher;
 	}
 
 	public function __call($methodName, array $args = array())
@@ -40,10 +50,10 @@ class MockBuilder
 
 			eval($code);
 			$mock = new $newName();
-			$mock->mockista = new Mock();
+			$mock->mockista = new Mock($this->argsMatcher);
 			$mock->mockista->mockName = $class;
 		} else {
-			$mock = new Mock();
+			$mock = new Mock($this->argsMatcher);
 		}
 
 		return $mock;
