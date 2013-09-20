@@ -20,7 +20,7 @@ class ArgsMatcher
 		}
 	}
 
-	private function hashArg($arg)
+	protected function hashArg($arg)
 	{
 		if (is_object($arg)) {
 			return spl_object_hash($arg);
