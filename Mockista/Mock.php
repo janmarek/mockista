@@ -53,7 +53,7 @@ class Mock implements MockInterface
 		}
 
 		if (!$best) {
-			$argsStr = var_export($args, TRUE);
+			$argsStr = print_r($args, TRUE);
 			$objectName = $this->mockName ? $this->mockName : 'unnammed';
 			throw new MockException("Unexpected call in mock $objectName::$name(), args: $argsStr", MockException::CODE_INVALID_ARGS);
 		}
