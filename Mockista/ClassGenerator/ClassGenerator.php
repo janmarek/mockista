@@ -23,7 +23,7 @@ class ClassGenerator extends BaseClassGenerator
 	{
 	}
 
-	function __call($name, $args)
+	function __call($name, array $args)
 	{
 		$l = call_user_func_array(array($this->mockista, $name), $args);
 		return $l;
