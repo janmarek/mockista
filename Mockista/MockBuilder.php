@@ -35,7 +35,7 @@ class MockBuilder
 			$classGenerator = new ClassGenerator();
 			$classGenerator->setMethodFinder(new MethodFinder());
 
-			$newName = str_replace("\\", "_", $class) . '_' . uniqid();
+			$newName = str_replace("\\", "_", $class) . '_' . mt_rand();
 			$code = $classGenerator->generate($class, $newName);
 
 			eval($code);
