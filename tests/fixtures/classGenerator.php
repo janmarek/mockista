@@ -30,6 +30,11 @@ class ClassGeneratorTest_Method
 	}
 }
 
+class ClassGeneratorTest_Typehinted__call {
+	function __call($laname, array $argumentos) {
+	}
+}
+
 interface ClassGeneratorTest_Interface
 {
 	function ai(Array $ax = array(1, 2, 3));
