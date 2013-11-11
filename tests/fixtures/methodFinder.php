@@ -17,7 +17,7 @@ class MethodFinderTest_Dummy1234Parent implements MethodFinderTest_Dummy1234If1
 
 class MethodFinderTest_Dummy1234 extends MethodFinderTest_Dummy1234Parent implements MethodFinderTest_Dummy1234If2
 {
-	static function b(Array $c = array('a'))
+	static function b(array $c = array('a'))
 	{
 	}
 

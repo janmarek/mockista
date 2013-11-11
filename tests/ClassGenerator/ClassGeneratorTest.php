@@ -117,7 +117,7 @@ class A_B_ClassGeneratorTest_Empty_Generated implements ClassGeneratorTest_Empty
 		return $l;
 	}
 
-	function ai(Array $ax = array (  0 => 1,  1 => 2,  2 => 3,))
+	function ai(array $ax = array (  0 => 1,  1 => 2,  2 => 3,))
 	{
 		$l = call_user_func_array(array($this->mockista, \'ai\'), func_get_args());
 		return $l;

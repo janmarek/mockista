@@ -39,7 +39,7 @@ class MethodFinderTest extends \PHPUnit_Framework_TestCase
 	{
 		$methods = $this->object->methods("MethodFinderTest_Dummy1234");
 		$this->assertEquals(array("a"), $methods['b']['parameters'][0]['default']);
-		$this->assertEquals('Array', $methods['b']['parameters'][0]['typehint']);
+		$this->assertEquals('array', $methods['b']['parameters'][0]['typehint']);
 
 		$this->assertEquals('Exception', $methods['c']['parameters'][0]['typehint']);
 		$this->assertEquals(TRUE, $methods['c']['parameters'][0]['passedByReference']);
