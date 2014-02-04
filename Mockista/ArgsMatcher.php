@@ -20,7 +20,7 @@ class ArgsMatcher
 		}
 	}
 
-	private function hashArg($arg)
+	protected function hashArg($arg)
 	{
 		if (is_object($arg)) {
 			return spl_object_hash($arg);
@@ -28,7 +28,7 @@ class ArgsMatcher
 			try {
 				return md5(serialize($arg));
 			} catch (\Exception $e) {
-				return md5(serialize(var_export($arg, TRUE)));
+				return md5(serialize(print_r($arg, TRUE)));
 			}
 		}
 	}

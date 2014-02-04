@@ -7,13 +7,17 @@ class Mock implements MockInterface
 
 	protected $methods = array();
 
-	private $argsMatcher;
-
 	public $mockName = NULL;
 
-	public function __construct()
+	/** @var ArgsMatcher */
+	private $argsMatcher;
+
+	public function __construct(ArgsMatcher $argsMatcher = NULL)
 	{
-		$this->argsMatcher = new ArgsMatcher();
+		if ($argsMatcher === NULL) {
+			$argsMatcher = new ArgsMatcher();
+		}
+		$this->argsMatcher = $argsMatcher;
 	}
 
 	public function assertExpectations()
@@ -49,7 +53,7 @@ class Mock implements MockInterface
 		}
 
 		if (!$best) {
-			$argsStr = var_export($args, TRUE);
+			$argsStr = print_r($args, TRUE);
 			$objectName = $this->mockName ? $this->mockName : 'unnammed';
 			throw new MockException("Unexpected call in mock $objectName::$name(), args: $argsStr", MockException::CODE_INVALID_ARGS);
 		}
