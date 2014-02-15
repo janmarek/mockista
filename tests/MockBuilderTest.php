@@ -33,6 +33,14 @@ class MockBuilderTest extends \PHPUnit_Framework_TestCase
 		$this->assertInstanceOf('Mockista\MockFactoryTest_Generated', $mock);
 	}
 
+	function testBuildingFromExistingMock() {
+		$builder = new MockBuilder('Mockista\MockFactoryTest_Generated');
+		$mock = $builder->getMock();
+		$builder2 = new MockBuilder($mock);
+		$mock2 = $builder2->getMock();
+		$this->assertSame($mock, $mock2);
+	}
+
 	function testFunctionShortcut()
 	{
 		$this->assertInstanceOf('Mockista\MockFactoryTest_Generated', \Mockista\mock('Mockista\MockFactoryTest_Generated'));
