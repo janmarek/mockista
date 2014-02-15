@@ -9,7 +9,7 @@ class Mock implements MockInterface
 
 	private $argsMatcher;
 
-	public $mockName = NULL;
+	private $mockName = NULL;
 
 	public function __construct()
 	{
@@ -23,6 +23,14 @@ class Mock implements MockInterface
 				$argCombinationMethod->assertExpectations();
 			}
 		}
+	}
+
+	public function getMockName() {
+		return $this->mockName;
+	}
+
+	public function setMockName($name) {
+		$this->mockName = $name;
 	}
 
 	private function checkMethodsNamespace($name)

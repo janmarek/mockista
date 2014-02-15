@@ -181,7 +181,7 @@ class Method implements MethodInterface
 		$message = "";
 		$code = 0;
 
-		$mockName = $this->owningMock->mockName;
+		$mockName = $this->owningMock->getMockName();
 		if (empty($mockName)) {
 			$mockName = 'unnamed';
 		}
