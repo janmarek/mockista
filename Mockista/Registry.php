@@ -52,14 +52,9 @@ class Registry
 		$builder = new MockBuilder($class, $methods);
 		$mock = $builder->getMock();
 		if (isset($this->mocks[$name])) {
-			throw new MockException("Mock with name {$mock->mockName} is already registered.");
+			throw new MockException("Mock with name {$name} is already registered.");
 		}
-		if ($mock instanceof Mock) {
-			$mock->mockName = $name;
-		} else {
-			$mock->mockista->mockName = $name;
-		}
-
+		$mock->setMockName($name);
 		$this->mocks[$name] = $mock;
 		$this->mockId++;
 		return $builder;

@@ -25,12 +25,12 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	function test_mocks_are_named_properly() {
-		$this->assertEquals('#1', $this->object->create()->mockName);
-		$this->assertEquals('service', $this->object->createNamed('service')->mockName);
-		$this->assertEquals('stdClass#3', $this->object->createBuilder('stdClass')->getMock()->mockName);
-		$this->assertEquals('#4', $this->object->create()->mockName);
-		$this->assertEquals('Mockista\A#5', $this->object->create('Mockista\A')->mockName);
-		$this->assertEquals('abc', $this->object->createNamedBuilder('abc', 'Mockista\A')->getMock()->mockName);
+		$this->assertEquals('#1', $this->object->create()->getMockName());
+		$this->assertEquals('service', $this->object->createNamed('service')->getMockName());
+		$this->assertEquals('stdClass#3', $this->object->createBuilder('stdClass')->getMock()->getMockName());
+		$this->assertEquals('#4', $this->object->create()->getMockName());
+		$this->assertEquals('Mockista\A#5', $this->object->create('Mockista\A')->getMockName());
+		$this->assertEquals('abc', $this->object->createNamedBuilder('abc', 'Mockista\A')->getMock()->getMockName());
 	}
 
 	/**
@@ -53,7 +53,7 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 		$this->object->createNamed('first');
 		$mock = $this->object->getMock('first');
 		$this->assertInstanceOf('Mockista\\Mock', $mock);
-		$this->assertEquals('first', $mock->mockName);
+		$this->assertEquals('first', $mock->getMockName());
 	}
 
 	/**
