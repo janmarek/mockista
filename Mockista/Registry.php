@@ -11,7 +11,8 @@ class Registry
 	private $mockId = 1;
 
 	/**
-	 * @param string $class
+	 * Create mock
+	 * @param string $class mocked class
 	 * @param array $methods
 	 * @return MockInterface
 	 */
@@ -21,6 +22,7 @@ class Registry
 	}
 
 	/**
+	 * Create mock with user defined name
 	 * @param string $name
 	 * @param string $class
 	 * @param array $methods
@@ -32,6 +34,7 @@ class Registry
 	}
 
 	/**
+	 * Create mock builder
 	 * @param string $class
 	 * @param array $methods
 	 * @return MockBuilder
@@ -39,36 +42,54 @@ class Registry
 	public function createBuilder($class = NULL, array $methods = array())
 	{
 		$name = $class ? "{$class}#{$this->mockId}" : "#{$this->mockId}";
+
 		return $this->createNamedBuilder($name, $class, $methods);
 	}
 
 	/**
-	 * @param string $name
+	 * Create builder for named mock
+	 *
+	 * @param string $name user defined name
 	 * @param string $class
 	 * @param array $methods
 	 * @return MockBuilder
 	 */
-	public function createNamedBuilder($name, $class = NULL, array $methods = array()) {
+	public function createNamedBuilder($name, $class = NULL, array $methods = array())
+	{
 		$builder = new MockBuilder($class, $methods);
 		$mock = $builder->getMock();
 		if (isset($this->mocks[$name])) {
-			throw new MockException("Mock with name {$name} is already registered.");
+			throw new InvalidArgumentException("Mock with name {$name} is already registered.");
 		}
-		$mock->setMockName($name);
+		$mock->setName($name);
 		$this->mocks[$name] = $mock;
 		$this->mockId++;
+
 		return $builder;
 	}
 
-	public function getMock($name) {
+	/**
+	 * Get named mock
+	 * @param string $name
+	 * @return MockInterface
+	 */
+	public function getMockByName($name)
+	{
 		if (!isset($this->mocks[$name])) {
-			throw new MockException("There is no mock named {$name} in the registry");
+			throw new InvalidArgumentException("There is no mock named {$name} in the registry");
 		}
+
 		return $this->mocks[$name];
 	}
 
-	public function getBuilder($name) {
-		return new MockBuilder($this->getMock($name));
+	/**
+	 * Get builder for named mock
+	 * @param string $name
+	 * @return MockBuilder
+	 */
+	public function getBuilderByName($name)
+	{
+		return MockBuilder::createFromMock($this->getMockByName($name));
 	}
 
 	/**

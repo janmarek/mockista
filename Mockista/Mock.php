@@ -9,7 +9,7 @@ class Mock implements MockInterface
 
 	private $argsMatcher;
 
-	private $mockName = NULL;
+	private $name = NULL;
 
 	public function __construct()
 	{
@@ -25,12 +25,22 @@ class Mock implements MockInterface
 		}
 	}
 
-	public function getMockName() {
-		return $this->mockName;
+	/**
+	 * Get user defined name
+	 * @return string
+	 */
+	public function getName()
+	{
+		return $this->name;
 	}
 
-	public function setMockName($name) {
-		$this->mockName = $name;
+	/**
+	 * Set user defined name
+	 * @param string $name
+	 */
+	public function setName($name)
+	{
+		$this->name = $name;
 	}
 
 	private function checkMethodsNamespace($name)
@@ -58,7 +68,7 @@ class Mock implements MockInterface
 
 		if (!$best) {
 			$argsStr = var_export($args, TRUE);
-			$objectName = $this->mockName ? $this->mockName : 'unnammed';
+			$objectName = $this->name ? $this->name : 'unnammed';
 			throw new MockException("Unexpected call in mock $objectName::$name(), args: $argsStr", MockException::CODE_INVALID_ARGS);
 		}
 

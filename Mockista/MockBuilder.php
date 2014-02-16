@@ -11,21 +11,23 @@ class MockBuilder
 	/** @var Mock */
 	private $mock;
 
-	public function __construct($classOrMock = NULL, array $defaults = array())
+	public function __construct($className = NULL, array $defaults = array())
 	{
-
-		if (is_array($classOrMock)) {
-			$defaults = $classOrMock;
-			$classOrMock = NULL;
-		} else if (is_object($classOrMock) && ($classOrMock instanceOf Mock || property_exists($classOrMock, 'mockista'))) {
-			$this->mock = $classOrMock;
+		if (is_array($className)) {
+			$defaults = $className;
+			$className = NULL;
 		}
 
-		if ($this->mock === NULL) {
-			$this->mock = $this->createMock($classOrMock);
-		}
-
+		$this->mock = $this->createMock($className);
 		$this->addMethods($defaults);
+	}
+
+	public static function createFromMock($mock)
+	{
+		$builder = new self();
+		$builder->mock = $mock;
+
+		return $builder;
 	}
 
 	public function __call($methodName, array $args = array())
@@ -47,7 +49,7 @@ class MockBuilder
 			eval($code);
 			$mock = new $newName();
 			$mock->mockista = new Mock();
-			$mock->mockista->setMockName($class);
+			$mock->mockista->setName($class);
 		} else {
 			$mock = new Mock();
 		}

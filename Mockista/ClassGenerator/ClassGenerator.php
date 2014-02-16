@@ -5,7 +5,7 @@ namespace Mockista\ClassGenerator;
 class ClassGenerator extends BaseClassGenerator
 {
 
-	function generate($inheritedClass, $newName)
+	public function generate($inheritedClass, $newName)
 	{
 		$extends = class_exists($inheritedClass) ? "extends" : "implements";
 		$methods = $this->methodFinder->methods($inheritedClass);
