@@ -67,7 +67,7 @@ class Mock implements MockInterface
 		}
 
 		if (!$best) {
-			$argsStr = var_export($args, TRUE);
+			$argsStr = @var_export($args, TRUE); // intentionally used shut-up operator (@) to prevent "var_export does not handle circular references" warning
 			$objectName = $this->name ? $this->name : 'unnammed';
 			throw new MockException("Unexpected call in mock $objectName::$name(), args: $argsStr", MockException::CODE_INVALID_ARGS);
 		}
