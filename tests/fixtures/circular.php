@@ -5,13 +5,13 @@ namespace Mockista\Test;
 class Circular implements \Serializable
 {
 
-    private $reference;
+	private $reference;
 
-    public function __construct()
-    {
-        $this->reference = $this;
-    }
-	
+	public function __construct()
+	{
+		$this->reference = $this;
+	}
+
 	public function serialize()
 	{
 		throw new \Exception();
