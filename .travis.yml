@@ -6,6 +6,10 @@ php:
   - 5.5
   - hhvm
 
+matrix:
+  allow_failures:
+    - php: hhvm
+
 before_script:
   - "sh -c 'curl -s http://getcomposer.org/installer | php'"
   - "sh -c 'php composer.phar install --quiet'"
