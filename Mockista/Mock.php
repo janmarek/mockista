@@ -67,9 +67,19 @@ class Mock implements MockInterface
 		}
 
 		if (!$best) {
-			$argsStr = var_export($args, TRUE);
+			$argsStr = '';
+
+			foreach ($args as $arg) {
+				ob_start();
+				var_dump($arg);
+				$lines = explode(PHP_EOL, ob_get_clean());
+				for ($i = 0; $i < count($lines); $i++) {
+					$argsStr .= PHP_EOL . ($i === 0 ? '- ' : '  ') . $lines[$i];
+				}
+
+			}
 			$objectName = $this->name ? $this->name : 'unnammed';
-			throw new MockException("Unexpected call in mock $objectName::$name(), args: $argsStr", MockException::CODE_INVALID_ARGS);
+			throw new MockException("Unexpected call in mock $objectName::$name(), args:\n$argsStr", MockException::CODE_INVALID_ARGS);
 		}
 
 		return $best;

@@ -7,6 +7,7 @@ use Mockista\MockBuilder;
 use Mockista\MethodInterface;
 
 require __DIR__ . '/fixtures/exception.php';
+require __DIR__ . '/fixtures/circular.php';
 
 /**
  * @author Jiri Knesl
@@ -188,6 +189,30 @@ class MockistaTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals(1, $mock->abc());
 		$this->assertEquals(2, $mock->abc(array()));
+	}
+
+	public function testCircularParameter()
+	{
+		$arg = array('circular' => new Circular());
+
+		$mock = Mockista\mock();
+		$mock->expects('method')->with($arg)->once()->andReturn(1);
+
+		$this->assertEquals(1, $mock->method($arg));
+	}
+
+	/**
+	 * @expectedException Mockista\MockException
+	 * @expectedExceptionCode 4
+	 */
+	public function testNotMatchedCircularParameter()
+	{
+		$arg = new Circular();
+
+		$mock = Mockista\mock();
+		$mock->expects('method')->with()->once()->andReturn(1);
+
+		$this->assertEquals(1, $mock->method($arg, 4, 'asdf'));
 	}
 
 }

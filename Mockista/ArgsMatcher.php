@@ -28,7 +28,9 @@ class ArgsMatcher
 			try {
 				return md5(serialize($arg));
 			} catch (\Exception $e) {
-				return md5(serialize(var_export($arg, TRUE)));
+				ob_start();
+				var_dump($arg);
+				return md5(ob_get_clean());
 			}
 		}
 	}
