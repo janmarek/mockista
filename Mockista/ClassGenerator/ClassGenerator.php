@@ -22,13 +22,28 @@ class ClassGenerator extends BaseClassGenerator
 	function __construct()
 	{
 	}
-
-	function __call($name, $args)
-	{
-		$l = call_user_func_array(array($this->mockista, $name), $args);
-		return $l;
-	}
 ';
+
+		if (isset($methods['__call'])) {
+			$parameters = $methods['__call']['parameters'];
+			$callNameParamName = '$' . $parameters[0]['name'];
+			$callArgsParamName = '$' . $parameters[1]['name'];
+			$callParams = $this->generateParams($methods['__call']['parameters']);
+		} else {
+			$callNameParamName = '$name';
+			$callArgsParamName = '$args';
+			$callParams = '$name, $args';
+		}
+
+
+		$out .= "
+	function __call($callParams)
+	{
+		\$l = call_user_func_array(array(\$this->mockista, $callNameParamName), $callArgsParamName);
+		return \$l;
+	}
+";
+
 		foreach ($methods as $name => $method) {
 			if ("__call" == $name || "__construct" == $name || $method['final']) {
 				continue;

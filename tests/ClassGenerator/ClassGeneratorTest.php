@@ -101,6 +101,26 @@ class A_B_ClassGeneratorTest_Empty_Generated implements ClassGeneratorTest_Empty
 		$this->assertEquals($classIncludingMethod, $this->object->generate("ClassGeneratorTest_Method", "ClassGeneratorTest_Method_Generated"));
 	}
 
+	function testTypeHintedCallMethod() {
+		$source = 'class ClassGeneratorTest_Typehinted__call_generated extends ClassGeneratorTest_Typehinted__call
+{
+	public $mockista;
+
+	function __construct()
+	{
+	}
+
+	function __call($laname, array $argumentos)
+	{
+		$l = call_user_func_array(array($this->mockista, $laname), $argumentos);
+		return $l;
+	}
+}
+';
+		$this->object->setMethodFinder(new MethodFinder());
+		$this->assertEquals($source, $this->object->generate("ClassGeneratorTest_Typehinted__call", "ClassGeneratorTest_Typehinted__call_generated"));
+	}
+
 	function testInterface()
 	{
 		$interfaceBasedClass = 'class ClassGeneratorTest_Interface_Generated implements ClassGeneratorTest_Interface
@@ -117,7 +137,7 @@ class A_B_ClassGeneratorTest_Empty_Generated implements ClassGeneratorTest_Empty
 		return $l;
 	}
 
-	function ai(Array $ax = array (  0 => 1,  1 => 2,  2 => 3,))
+	function ai(array $ax = array (  0 => 1,  1 => 2,  2 => 3,))
 	{
 		$l = call_user_func_array(array($this->mockista, \'ai\'), func_get_args());
 		return $l;

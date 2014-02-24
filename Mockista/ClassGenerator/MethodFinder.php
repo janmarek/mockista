@@ -49,7 +49,7 @@ class MethodFinder
 				$parameterDesc['default'] = $parameter->getDefaultValue();
 			}
 			if ($parameter->isArray()) {
-				$parameterDesc['typehint'] = 'Array';
+				$parameterDesc['typehint'] = 'array';
 			} else {
 				$klass = $parameter->getClass();
 				if ($klass) {
