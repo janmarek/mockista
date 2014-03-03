@@ -35,6 +35,15 @@ class MockistaTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue($method instanceof MethodInterface);
 	}
 
+	public function testWithAny()
+	{
+		$method = $this->object->expects('abc')->with(1, 2)->withAny();
+		$this->object->abc('any');
+		$this->object->abc(4, 5);
+		$this->object->abc();
+		$this->object->assertExpectations();
+	}
+
 	public function testMethodReturn()
 	{
 		$this->object->expects('abc')->andReturn(11);
