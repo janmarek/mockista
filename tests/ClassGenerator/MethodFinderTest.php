@@ -52,7 +52,11 @@ class MethodFinderTest extends \PHPUnit_Framework_TestCase
 
 	function testCallable()
 	{
-		$methods = $this->object->methods("MethodFinderTest_Dummy1234_54");
-		$this->assertEquals('callable', $methods['a']['parameters'][0]['typehint']);
+		if (PHP_VERSION_ID >= 50400) {
+			$methods = $this->object->methods("MethodFinderTest_Dummy1234_54");
+			$this->assertEquals('callable', $methods['a']['parameters'][0]['typehint']);
+		} else {
+			$this->markTestSkipped("Available only in PHP 5.4+");
+		}
 	}
 }
