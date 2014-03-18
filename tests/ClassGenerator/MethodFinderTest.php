@@ -6,6 +6,10 @@ use Mockista\ClassGenerator\MethodFinder;
 
 require __DIR__ . '/../fixtures/methodFinder.php';
 
+if (PHP_VERSION_ID >= 50400) {
+    require __DIR__ . '/../fixtures/5.4/methodFinder.php';
+}
+
 class MethodFinderTest extends \PHPUnit_Framework_TestCase
 {
 
@@ -46,4 +50,13 @@ class MethodFinderTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue($methods['c']['passedByReference']);
 	}
 
+	function testCallable()
+	{
+		if (PHP_VERSION_ID >= 50400) {
+			$methods = $this->object->methods("MethodFinderTest_Dummy1234_54");
+			$this->assertEquals('callable', $methods['a']['parameters'][0]['typehint']);
+		} else {
+			$this->markTestSkipped("Available only in PHP 5.4+");
+		}
+	}
 }
