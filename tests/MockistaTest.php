@@ -89,6 +89,12 @@ class MockistaTest extends \PHPUnit_Framework_TestCase
 		$this->object->assertExpectations();
 	}
 
+	public function testCollectNeverAndNotCalled()
+	{
+		$this->object->expects('abc')->never();
+		$this->object->assertExpectations();
+	}
+
 	public function testCollectExactly()
 	{
 		$this->object->expects('abc')->exactly(3);

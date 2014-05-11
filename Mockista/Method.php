@@ -72,26 +72,17 @@ class Method implements MethodInterface
 
 	public function once()
 	{
-		$this->callType = self::CALL_TYPE_EXACTLY;
-		$this->callCount = 1;
-
-		return $this;
+		return $this->exactly(1);
 	}
 
 	public function twice()
 	{
-		$this->callType = self::CALL_TYPE_EXACTLY;
-		$this->callCount = 2;
-
-		return $this;
+		return $this->exactly(2);
 	}
 
 	public function never()
 	{
-		$this->callType = self::CALL_TYPE_EXACTLY;
-		$this->callCount = 0;
-
-		return $this;
+		return $this->exactly(0);
 	}
 
 	public function exactly($count)
@@ -102,13 +93,9 @@ class Method implements MethodInterface
 		return $this;
 	}
 
-
 	public function atLeastOnce()
 	{
-		$this->callType = self::CALL_TYPE_AT_LEAST;
-		$this->callCount = 1;
-
-		return $this;
+		return $this->atLeast(1);
 	}
 
 	public function atLeast($count)
@@ -121,10 +108,7 @@ class Method implements MethodInterface
 
 	public function noMoreThanOnce()
 	{
-		$this->callType = self::CALL_TYPE_NO_MORE_THAN;
-		$this->callCount = 1;
-
-		return $this;
+		return $this->noMoreThan(1);
 	}
 
 	public function noMoreThan($count)
