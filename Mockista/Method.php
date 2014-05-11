@@ -54,6 +54,12 @@ class Method implements MethodInterface
 		return $this;
 	}
 
+	public function withAny()
+	{
+		$this->args = NULL;
+		return $this;
+	}
+
 	public function matchArgs($arguments)
 	{
 		return $this->argsMatcher->serializeArgs($arguments) === $this->args;
