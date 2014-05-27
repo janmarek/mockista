@@ -17,4 +17,5 @@ class MockFactoryTest_Generated
 
 class A {
 	public function mockMe() {}
+	public function setName($name) {}
 }
