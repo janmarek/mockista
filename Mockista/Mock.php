@@ -11,6 +11,8 @@ class Mock implements MockInterface
 
 	private $name = NULL;
 
+	private $frozen = FALSE;
+
 	public function __construct()
 	{
 		$this->argsMatcher = new ArgsMatcher();
@@ -18,6 +20,9 @@ class Mock implements MockInterface
 
 	public function assertExpectations()
 	{
+		if ($this->frozen) {
+			return $this->__call(__FUNCTION__, func_get_args());
+		}
 		foreach ($this->methods as $method) {
 			foreach ($method as $argCombinationMethod) {
 				$argCombinationMethod->assertExpectations();
@@ -31,6 +36,9 @@ class Mock implements MockInterface
 	 */
 	public function getName()
 	{
+		if ($this->frozen) {
+			return $this->__call(__FUNCTION__, func_get_args());
+		}
 		return $this->name;
 	}
 
@@ -40,7 +48,22 @@ class Mock implements MockInterface
 	 */
 	public function setName($name)
 	{
+		if ($this->frozen) {
+			return $this->__call(__FUNCTION__, func_get_args());
+		}
 		$this->name = $name;
+	}
+
+	/**
+	 * Freeze mock and prevent from default method collisions
+	 * @return mixed|null
+	 */
+	public function freeze()
+	{
+		if ($this->frozen) {
+			return $this->__call(__FUNCTION__, func_get_args());
+		}
+		$this->frozen = TRUE;
 	}
 
 	private function checkMethodsNamespace($name)
@@ -91,6 +114,10 @@ class Mock implements MockInterface
 	 */
 	public function expects($name)
 	{
+		if ($this->frozen) {
+			return $this->__call(__FUNCTION__, func_get_args());
+		}
+
 		$this->checkMethodsNamespace($name);
 		$method = new Method($this->argsMatcher);
 		$method->owningMock = $this;
