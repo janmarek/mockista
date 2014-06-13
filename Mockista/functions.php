@@ -2,9 +2,9 @@
 
 namespace Mockista;
 
-function mock($class = NULL, array $defaults = array())
+function mock($mocked = NULL, array $defaults = array())
 {
-	$builder = new MockBuilder($class, $defaults);
+	$builder = new MockBuilder($mocked, $defaults);
 
 	return $builder->getMock();
 }

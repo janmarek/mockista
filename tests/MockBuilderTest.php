@@ -4,7 +4,8 @@ namespace Mockista\Test;
 
 use Mockista\MockBuilder;
 
-require __DIR__ . '/fixtures/factory.php';
+require_once __DIR__ . '/fixtures/factory.php';
+require_once __DIR__ . '/fixtures/mockedObject.php';
 
 class MockBuilderTest extends \PHPUnit_Framework_TestCase
 {
@@ -39,6 +40,13 @@ class MockBuilderTest extends \PHPUnit_Framework_TestCase
 		$builder2 = MockBuilder::createFromMock($mock);
 		$mock2 = $builder2->getMock();
 		$this->assertSame($mock, $mock2);
+	}
+
+	function testBuildingProxyMock() {
+		$mocked = new \MockedObject(100);
+		$builder = new MockBuilder($mocked);
+		$mock = $builder->getMock();
+		$this->assertInstanceOf('MockedObject', $mock);
 	}
 
 	function testFunctionShortcut()

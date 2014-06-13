@@ -9,6 +9,7 @@ if (class_exists("\PHPUnit_Framework_AssertionFailedError")) {
 		const CODE_AT_LEAST = 2;
 		const CODE_NO_MORE_THAN = 3;
 		const CODE_INVALID_ARGS = 4;
+		const CODE_CANNOT_PASS = 5;
 	}
 } else {
 	class MockException extends \Exception
@@ -17,5 +18,6 @@ if (class_exists("\PHPUnit_Framework_AssertionFailedError")) {
 		const CODE_AT_LEAST = 2;
 		const CODE_NO_MORE_THAN = 3;
 		const CODE_INVALID_ARGS = 4;
+		const CODE_CANNOT_PASS = 5;
 	}
 }

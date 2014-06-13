@@ -12,10 +12,13 @@ class Method implements MethodInterface
 	const INVOKE_STRATEGY_RETURN = 1;
 	const INVOKE_STRATEGY_THROW = 2;
 	const INVOKE_STRATEGY_CALLBACK = 3;
+	const INVOKE_STRATEGY_PASS = 4;
 
 	public $owningMock = NULL;
 
 	public $name = '';
+
+	public $mocked = NULL;
 
 	protected $args = NULL;
 
@@ -145,6 +148,16 @@ class Method implements MethodInterface
 		return $this;
 	}
 
+	public function andPass()
+	{
+		if($this->mocked === NULL) {
+			throw new \LogicException("andPass strategy can only be used when we mocking instance not class");
+		}
+		$this->invokeStrategy = self::INVOKE_STRATEGY_PASS;
+
+		return $this;
+	}
+
 	public function invoke($args)
 	{
 		$this->callCountReal++;
@@ -162,6 +175,14 @@ class Method implements MethodInterface
 				break;
 			case self::INVOKE_STRATEGY_CALLBACK:
 				return call_user_func_array($this->calledCallback, $args);
+			case self::INVOKE_STRATEGY_PASS:
+				$passTo = array($this->mocked, $this->name);
+				if(!is_callable($passTo)) {
+					throw new MockException("Cannot pass expected call to mocked object. ".
+						"Method '$this->name' in '".get_class($this->mocked)."' doesn't exists.", MockException::CODE_CANNOT_PASS);
+				}
+				return call_user_func_array($passTo, $args);
+				break;
 		}
 	}
 

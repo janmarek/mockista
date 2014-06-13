@@ -6,8 +6,8 @@ use Mockista;
 use Mockista\MockBuilder;
 use Mockista\MethodInterface;
 
-require __DIR__ . '/fixtures/exception.php';
-require __DIR__ . '/fixtures/circular.php';
+require_once __DIR__ . '/fixtures/exception.php';
+require_once __DIR__ . '/fixtures/circular.php';
 
 /**
  * @author Jiri Knesl
