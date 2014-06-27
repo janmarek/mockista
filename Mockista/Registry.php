@@ -12,25 +12,25 @@ class Registry
 
 	/**
 	 * Create mock
-	 * @param string $class mocked class
+	 * @param string $mocked mocked class or object
 	 * @param array $methods
 	 * @return MockInterface
 	 */
-	public function create($class = NULL, array $methods = array())
+	public function create($mocked = NULL, array $methods = array())
 	{
-		return $this->createBuilder($class, $methods)->getMock();
+		return $this->createBuilder($mocked, $methods)->getMock();
 	}
 
 	/**
 	 * Create mock with user defined name
 	 * @param string $name
-	 * @param string $class
+	 * @param string $mocked
 	 * @param array $methods
 	 * @return MockInterface
 	 */
-	public function createNamed($name, $class = NULL, array $methods = array())
+	public function createNamed($name, $mocked = NULL, array $methods = array())
 	{
-		return $this->createNamedBuilder($name, $class, $methods)->getMock();
+		return $this->createNamedBuilder($name, $mocked, $methods)->getMock();
 	}
 
 	/**
@@ -39,11 +39,18 @@ class Registry
 	 * @param array $methods
 	 * @return MockBuilder
 	 */
-	public function createBuilder($class = NULL, array $methods = array())
+	public function createBuilder($mocked = NULL, array $methods = array())
 	{
-		$name = $class ? "{$class}#{$this->mockId}" : "#{$this->mockId}";
+		if(is_object($mocked)) {
+			$class = get_class($mocked);
+			$name = "{$class}#{$this->mockId}";
+		} else if($mocked) {
+			$name = "{$mocked}#{$this->mockId}";
+		} else {
+			$name = "#{$this->mockId}";
+		}
 
-		return $this->createNamedBuilder($name, $class, $methods);
+		return $this->createNamedBuilder($name, $mocked, $methods);
 	}
 
 	/**
@@ -54,9 +61,9 @@ class Registry
 	 * @param array $methods
 	 * @return MockBuilder
 	 */
-	public function createNamedBuilder($name, $class = NULL, array $methods = array())
+	public function createNamedBuilder($name, $mocked = NULL, array $methods = array())
 	{
-		$builder = new MockBuilder($class, $methods);
+		$builder = new MockBuilder($mocked, $methods);
 		$mock = $builder->getMock();
 		if (isset($this->mocks[$name])) {
 			throw new InvalidArgumentException("Mock with name {$name} is already registered.");
