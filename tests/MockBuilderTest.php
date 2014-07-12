@@ -33,12 +33,21 @@ class MockBuilderTest extends \PHPUnit_Framework_TestCase
 		$this->assertInstanceOf('Mockista\MockFactoryTest_Generated', $mock);
 	}
 
-	function testBuildingFromExistingMock() {
+	function testBuildingFromExistingMock()
+	{
 		$builder = new MockBuilder('Mockista\MockFactoryTest_Generated');
 		$mock = $builder->getMock();
 		$builder2 = MockBuilder::createFromMock($mock);
 		$mock2 = $builder2->getMock();
 		$this->assertSame($mock, $mock2);
+	}
+
+	function testBuildingInternalClass()
+	{
+		$builder = new MockBuilder('ReflectionClass');
+		$mock = $builder->getMock();
+		$builder = new MockBuilder('RecursiveIteratorIterator');
+		$mock = $builder->getMock();
 	}
 
 	function testFunctionShortcut()

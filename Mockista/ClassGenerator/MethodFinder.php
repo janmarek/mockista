@@ -46,7 +46,11 @@ class MethodFinder
 			$parameterDesc['passedByReference'] = $parameter->isPassedByReference();
 
 			if ($parameter->isOptional()) {
-				$parameterDesc['default'] = $parameter->getDefaultValue();
+				if ($parameter->getDeclaringClass()->isInternal() === FALSE) {
+					$parameterDesc['default'] = $parameter->getDefaultValue();
+				} else {
+					$parameterDesc['default'] = NULL;
+				}
 			}
 			if ($parameter->isArray()) {
 				$parameterDesc['typehint'] = 'array';
