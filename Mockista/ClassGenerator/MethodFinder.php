@@ -54,7 +54,7 @@ class MethodFinder
 			}
 			if ($parameter->isArray()) {
 				$parameterDesc['typehint'] = 'array';
-                        } elseif (PHP_VERSION_ID >= 50400 && $parameter->isCallable()) {
+			} elseif (PHP_VERSION_ID >= 50400 && $parameter->isCallable()) {
 				$parameterDesc['typehint'] = 'callable';
 			} else {
 				$klass = $parameter->getClass();
