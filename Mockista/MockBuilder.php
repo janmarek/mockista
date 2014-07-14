@@ -48,7 +48,7 @@ class MockBuilder
 
 			eval($code);
 			$mock = new $newName();
-			$mock->mockista = new Mock();
+			$mock->mockista = new Mock($class);
 			$mock->mockista->setName($class);
 		} else {
 			$mock = new Mock();

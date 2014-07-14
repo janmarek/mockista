@@ -12,7 +12,9 @@ class Method implements MethodInterface
 	const INVOKE_STRATEGY_RETURN = 1;
 	const INVOKE_STRATEGY_THROW = 2;
 	const INVOKE_STRATEGY_CALLBACK = 3;
+	const INVOKE_STRATEGY_PROXY = 4;
 
+	/** @var MockInterface */
 	public $owningMock = NULL;
 
 	public $name = '';
@@ -57,6 +59,7 @@ class Method implements MethodInterface
 	public function withAny()
 	{
 		$this->args = NULL;
+
 		return $this;
 	}
 
@@ -117,7 +120,6 @@ class Method implements MethodInterface
 		$this->callCount = $count;
 
 		return $this;
-
 	}
 
 	public function andReturn($returnValue)
@@ -145,6 +147,13 @@ class Method implements MethodInterface
 		return $this;
 	}
 
+	public function andCallOriginalMethod()
+	{
+		$this->invokeStrategy = self::INVOKE_STRATEGY_PROXY;
+
+		return $this;
+	}
+
 	public function invoke($args)
 	{
 		$this->callCountReal++;
@@ -162,6 +171,8 @@ class Method implements MethodInterface
 				break;
 			case self::INVOKE_STRATEGY_CALLBACK:
 				return call_user_func_array($this->calledCallback, $args);
+			case self::INVOKE_STRATEGY_PROXY:
+				return $this->owningMock->callOriginalMethod($this->name, $args);
 		}
 	}
 
@@ -180,7 +191,6 @@ class Method implements MethodInterface
 		$butMessage = $this->calledTimes($this->callCountReal);
 
 		switch ($this->callType) {
-
 			case self::CALL_TYPE_EXACTLY:
 				$passed = $this->callCount == $this->callCountReal;
 				$message = "Expected method {$funcName} " . $this->expectedTimes($this->callCount, 'exactly ');

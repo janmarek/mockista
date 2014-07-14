@@ -5,6 +5,12 @@ namespace Mockista;
 class Mock implements MockInterface
 {
 
+	private $mockClass;
+
+	private $proxyMock;
+
+	private $proxyMockConstructorArgs = [];
+
 	protected $methods = array();
 
 	private $argsMatcher;
@@ -13,9 +19,35 @@ class Mock implements MockInterface
 
 	private $frozen = FALSE;
 
-	public function __construct()
+	public function __construct($mockClass = NULL)
 	{
+		$this->mockClass = $mockClass;
 		$this->argsMatcher = new ArgsMatcher();
+	}
+
+	private function initProxyMock()
+	{
+		if ($this->proxyMock) {
+			return;
+		}
+
+		$reflection = new \ReflectionClass($this->mockClass);
+		$this->proxyMock = $reflection->newInstanceArgs($this->proxyMockConstructorArgs);
+	}
+
+	public function callConstructorWithArgs($args)
+	{
+		if ($this->frozen) {
+			return $this->__call(__FUNCTION__, func_get_args());
+		}
+
+		if ($this->proxyMock) {
+			throw new InvalidStateException('Object is already created.');
+		}
+
+		$this->proxyMockConstructorArgs = $args;
+		$this->proxyMockConstructorArgsSet = TRUE;
+		$this->initProxyMock();
 	}
 
 	public function assertExpectations()
@@ -129,6 +161,13 @@ class Mock implements MockInterface
 	public function __call($name, $args)
 	{
 		return $this->findMethod($name, $args)->invoke($args);
+	}
+
+	public function callOriginalMethod($name, $args)
+	{
+		$this->initProxyMock();
+
+		return call_user_func_array(array($this->proxyMock, $name), $args);
 	}
 
 }

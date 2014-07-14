@@ -61,6 +61,11 @@ interface MethodInterface
 	public function andThrow($throwException);
 
 	/**
+	 * @return MethodInterface
+	 */
+	public function andCallOriginalMethod();
+
+	/**
 	 * @param \Closure $callback
 	 * @return MethodInterface
 	 */

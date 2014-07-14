@@ -13,4 +13,11 @@ interface MockInterface
 
 	public function assertExpectations();
 
+	/**
+	 * @param string $name
+	 * @param array $args
+	 * @return mixed
+	 */
+	public function callOriginalMethod($name, $args);
+
 }
