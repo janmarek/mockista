@@ -2,6 +2,8 @@
 
 namespace Mockista;
 
+use Mockista\Matcher\LinearArrayMatcher;
+
 class Method implements MethodInterface
 {
 
@@ -35,13 +37,6 @@ class Method implements MethodInterface
 
 	protected $callCountReal = 0;
 
-	private $argsMatcher;
-
-	public function __construct(ArgsMatcher $argsMatcher)
-	{
-		$this->argsMatcher = $argsMatcher;
-	}
-
 	public function __get($name)
 	{
 		return $this->$name();
@@ -49,7 +44,7 @@ class Method implements MethodInterface
 
 	public function with()
 	{
-		$this->args = $this->argsMatcher->serializeArgs(func_get_args());
+		$this->args = new LinearArrayMatcher(func_get_args());
 
 		return $this;
 	}
@@ -57,12 +52,13 @@ class Method implements MethodInterface
 	public function withAny()
 	{
 		$this->args = NULL;
+
 		return $this;
 	}
 
 	public function matchArgs($arguments)
 	{
-		return $this->argsMatcher->serializeArgs($arguments) === $this->args;
+		return $this->args && $this->args->match($arguments);
 	}
 
 	public function hasArgs()

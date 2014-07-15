@@ -2,12 +2,13 @@
 
 namespace Mockista\Test;
 
-use Mockista;
+use Mockista\Matcher\Matchers;
+use Mockista\Mock;
 use Mockista\MockBuilder;
 use Mockista\MethodInterface;
 
-require __DIR__ . '/fixtures/exception.php';
-require __DIR__ . '/fixtures/circular.php';
+require_once __DIR__ . '/fixtures/exception.php';
+require_once __DIR__ . '/fixtures/circular.php';
 
 /**
  * @author Jiri Knesl
@@ -20,7 +21,7 @@ class MockistaTest extends \PHPUnit_Framework_TestCase
 
 	protected function setUp()
 	{
-		$this->object = Mockista\mock();
+		$this->object = \Mockista\mock();
 	}
 
 	public function testAttribute()
@@ -185,7 +186,7 @@ class MockistaTest extends \PHPUnit_Framework_TestCase
 
 	public function testMockArgs()
 	{
-		$mock = Mockista\mock(array(
+		$mock = \Mockista\mock(array(
 			"x" => 11,
 			"y" => function ($a) {
 				return $a * 2;
@@ -206,11 +207,22 @@ class MockistaTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(2, $mock->abc(array()));
 	}
 
+	public function testArgsMatcher()
+	{
+		$builder = new MockBuilder();
+		$builder->abc(Matchers::isString())->andReturn(1);
+		$builder->abc(Matchers::isString(), 2, Matchers::isInt())->andReturn(2);
+		$mock = $builder->getMock();
+
+		$this->assertEquals(1, $mock->abc('lorem ipsum'));
+		$this->assertEquals(2, $mock->abc('dolor', 2, 1));
+	}
+
 	public function testCircularParameter()
 	{
 		$arg = array('circular' => new Circular());
 
-		$mock = Mockista\mock();
+		$mock = \Mockista\mock();
 		$mock->expects('method')->with($arg)->once()->andReturn(1);
 
 		$this->assertEquals(1, $mock->method($arg));
@@ -224,7 +236,7 @@ class MockistaTest extends \PHPUnit_Framework_TestCase
 	{
 		$arg = new Circular();
 
-		$mock = Mockista\mock();
+		$mock = \Mockista\mock();
 		$mock->expects('method')->with()->once()->andReturn(1);
 
 		$this->assertEquals(1, $mock->method($arg, 4, 'asdf'));

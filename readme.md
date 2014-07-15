@@ -87,3 +87,30 @@ class SomeTestCase extends BaseTestCase
 }
 
 ```
+
+### Parameter matching
+   
+Parameters can be matched by value:
+
+```php
+$mock->expects('method')->once()->with(1, 'abc', TRUE)->andReturn(4);
+$builder->method(1, 'abc', TRUE)->andReturn(4);
+```
+
+Or you can use smarter parameter matcher:
+
+```php
+$mock->expects('method')->once()->with(Matchers::isInt(), Matchers::isString(), Matchers::isBool())->andReturn(4);
+$builder->method(Matchers::isInt(), Matchers::isString(), Matchers::isBool())->andReturn(4);
+```
+
+Available matchers are:
+
+* Matchers::isBool()
+* Matchers::isNumeric()
+* Matchers::isInt()
+* Matchers::isFloat()
+* Matchers::isString()
+* Matchers::isArray()
+* Matchers::regexp($pattern) - check string parameter by regular expression
+* Matchers::callback($callback) - check parameter by your custom logic passed in a callback

@@ -7,16 +7,9 @@ class Mock implements MockInterface
 
 	protected $methods = array();
 
-	private $argsMatcher;
-
 	private $name = NULL;
 
 	private $frozen = FALSE;
-
-	public function __construct()
-	{
-		$this->argsMatcher = new ArgsMatcher();
-	}
 
 	public function assertExpectations()
 	{
