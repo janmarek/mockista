@@ -2,6 +2,8 @@
 
 namespace Mockista;
 
+use Tracy\Dumper;
+
 class Mock implements MockInterface
 {
 
@@ -67,17 +69,7 @@ class Mock implements MockInterface
 		}
 
 		if (!$best) {
-			$argsStr = '';
-
-			foreach ($args as $arg) {
-				ob_start();
-				var_dump($arg);
-				$lines = explode(PHP_EOL, ob_get_clean());
-				for ($i = 0; $i < count($lines); $i++) {
-					$argsStr .= PHP_EOL . ($i === 0 ? '- ' : '  ') . $lines[$i];
-				}
-
-			}
+			$argsStr = Dumper::toText($args);
 			$objectName = $this->name ? $this->name : 'unnammed';
 			throw new MockException("Unexpected call in mock $objectName::$name(), args:\n$argsStr", MockException::CODE_INVALID_ARGS);
 		}

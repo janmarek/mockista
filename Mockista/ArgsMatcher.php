@@ -2,6 +2,8 @@
 
 namespace Mockista;
 
+use Tracy\Dumper;
+
 class ArgsMatcher
 {
 
@@ -28,9 +30,7 @@ class ArgsMatcher
 			try {
 				return md5(serialize($arg));
 			} catch (\Exception $e) {
-				ob_start();
-				var_dump($arg);
-				return md5(ob_get_clean());
+				return Dumper::toText($arg);
 			}
 		}
 	}
