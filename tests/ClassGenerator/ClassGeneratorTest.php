@@ -158,4 +158,27 @@ class A_B_ClassGeneratorTest_Empty_Generated implements ClassGeneratorTest_Empty
 		$this->object->generate("ClassGeneratorTest_Final", "ClassGeneratorTest_Final_Generated");
 	}
 
+	function testScalarTypeHintedCallMethod() {
+		if (PHP_VERSION_ID < 70000) {
+			$this->markTestSkipped("Available only in PHP 7.0+");
+		}
+		$source = 'class ClassGeneratorTest_ScalarTypehinted__call_generated extends ClassGeneratorTest_ScalarTypehinted__call
+{
+	public $mockista;
+
+	function __construct()
+	{
+	}
+
+	function __call(string $lastname, array $arguments)
+	{
+		$l = call_user_func_array(array($this->mockista, $lastname), $arguments);
+		return $l;
+	}
+}
+';
+		$this->object->setMethodFinder(new MethodFinder());
+		$this->assertEquals($source, $this->object->generate("ClassGeneratorTest_ScalarTypehinted__call", "ClassGeneratorTest_ScalarTypehinted__call_generated"));
+	}
+
 }

@@ -35,6 +35,11 @@ class ClassGeneratorTest_Typehinted__call {
 	}
 }
 
+class ClassGeneratorTest_ScalarTypehinted__call {
+	function __call(string $lastname, array $arguments) {
+	}
+}
+
 interface ClassGeneratorTest_Interface
 {
 	function ai(Array $ax = array(1, 2, 3));
