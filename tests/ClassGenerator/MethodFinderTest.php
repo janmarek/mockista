@@ -14,6 +14,10 @@ if (PHP_VERSION_ID >= 50600) {
 	require __DIR__ . '/../fixtures/5.6/methodFinder.php';
 }
 
+if (PHP_VERSION_ID >= 70000) {
+	require __DIR__ . '/../fixtures/7.0/methodFinder.php';
+}
+
 class MethodFinderTest extends \PHPUnit_Framework_TestCase
 {
 
@@ -63,7 +67,7 @@ class MethodFinderTest extends \PHPUnit_Framework_TestCase
 			$this->markTestSkipped("Available only in PHP 5.4+");
 		}
 	}
-
+	
 	function testVariadic()
 	{
 		if (PHP_VERSION_ID >= 50600) {
@@ -71,6 +75,17 @@ class MethodFinderTest extends \PHPUnit_Framework_TestCase
 			$this->assertEquals(TRUE, $methods['a']['parameters'][0]['variadic']);
 		} else {
 			$this->markTestSkipped("Available only in PHP 5.6+");
+		}
+	}
+	
+	function testScalarTypes()
+	{
+		if (PHP_VERSION_ID >= 70000) {
+			$methods = $this->object->methods("MethodFinderTest_Dummy1234_70");
+			$this->assertEquals('string', $methods['a']['parameters'][0]['typehint']);
+			$this->assertEquals('string', $methods['a']['returnType']);
+		} else {
+			$this->markTestSkipped("Available only in PHP 7.0+");
 		}
 	}
 }

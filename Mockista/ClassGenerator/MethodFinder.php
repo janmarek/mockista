@@ -24,6 +24,7 @@ class MethodFinder
 			'static' => $method->isStatic(),
 			'passedByReference' => $this->isMethodPassedByReference($method),
 			'final' => $method->isFinal(),
+			'returnType' => PHP_VERSION_ID >= 70000 ? (string) $method->getReturnType() : NULL,
 		);
 	}
 
@@ -65,7 +66,12 @@ class MethodFinder
 					$parameterDesc['typehint'] = $klass->getName();
 				}
 				else {
-					$parameterDesc['typehint'] = null;
+					if (PHP_VERSION_ID >= 70000) {
+						$parameterDesc['typehint'] = (string) $parameter->getType();
+					}
+					else {
+						$parameterDesc['typehint'] = null;
+					}
 				}
 			}
 			$out[$parameter->getPosition()] = $parameterDesc;
