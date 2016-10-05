@@ -27,6 +27,10 @@ class ClassGenerator
 				$outArr .= '&';
 			}
 
+			if ($param['variadic']) {
+				$outArr .= '...';
+			}
+
 			$outArr .= '$' . $param['name'];
 			if (array_key_exists('default', $param)) {
 				$outArr .= ' = ' . $this->removeNewLines(
