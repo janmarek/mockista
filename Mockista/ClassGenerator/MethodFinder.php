@@ -41,13 +41,16 @@ class MethodFinder
 			$parameterDesc = array(
 				'name' => $parameter->getName(),
 				'typehint' => null,
+				'variadic' => FALSE,
 			);
 
 			$parameterDesc['passedByReference'] = $parameter->isPassedByReference();
 
 			if ($parameter->isOptional()) {
-				if ($parameter->getDeclaringClass()->isInternal() === FALSE) {
+				if ($parameter->getDeclaringClass()->isInternal() === FALSE && $parameter->isDefaultValueAvailable()) {
 					$parameterDesc['default'] = $parameter->getDefaultValue();
+				} elseif (PHP_VERSION_ID >= 50600 && $parameter->isVariadic()) {
+					$parameterDesc['variadic'] = TRUE;
 				} else {
 					$parameterDesc['default'] = NULL;
 				}
