@@ -46,6 +46,10 @@ class SomeTestCase extends BaseTestCase
 		parent::setUp();
 
 		$this->mock1 = $this->mockista->create();
+
+		//mock can have custom name
+		//$this->mock1->mockista->mockName = 'mock1';
+
 		$this->mock1->expects('method')->andReturn(5);
 		$this->mock1->expects('method')->once()->with(1, 2, 3)->andReturn(4);
 
