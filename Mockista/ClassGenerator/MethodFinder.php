@@ -63,7 +63,7 @@ class MethodFinder
 			} else {
 				$klass = $parameter->getClass();
 				if ($klass) {
-					$parameterDesc['typehint'] = $klass->getName();
+					$parameterDesc['typehint'] = '\\' . $klass->getName();
 				}
 				else {
 					if (PHP_VERSION_ID >= 70000) {
