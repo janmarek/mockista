@@ -88,14 +88,20 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals("Already freezed", $mock->setName("name"));
 	}
 
-	/**
-	 * @expectedException Mockista\MockException
-	 * @expectedMessage   Unexpected call in mock Test::getName()
-	 */
-	function testFreezeMockExceptionOnUndefinedMethod()
+	function testFreezeMockWithAssertExpectations()
+	{
+		$mock1 = $this->object->create();
+		$mock1->expects('abc')->once();
+		$mock1->abc();
+		$mock1->freeze();
+		$this->object->assertExpectations();
+	}
+
+	function testFreezeMockNotFrozenMethodCall()
 	{
 		$mock = $this->object->create("Mockista\A");
 		$mock->freeze();
+		$mock->setName('Test');
 		$this->assertEquals("Test", $mock->getName());
 	}
 

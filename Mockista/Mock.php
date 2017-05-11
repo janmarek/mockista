@@ -13,7 +13,7 @@ class Mock implements MockInterface
 
 	public function assertExpectations()
 	{
-		if ($this->frozen) {
+		if ($this->frozen && isset($this->methods['assertExpectations'])) {
 			return $this->__call(__FUNCTION__, func_get_args());
 		}
 		foreach ($this->methods as $method) {
@@ -29,7 +29,7 @@ class Mock implements MockInterface
 	 */
 	public function getName()
 	{
-		if ($this->frozen) {
+		if ($this->frozen && isset($this->methods['getName'])) {
 			return $this->__call(__FUNCTION__, func_get_args());
 		}
 		return $this->name;
@@ -41,7 +41,7 @@ class Mock implements MockInterface
 	 */
 	public function setName($name)
 	{
-		if ($this->frozen) {
+		if ($this->frozen && isset($this->methods['setName'])) {
 			return $this->__call(__FUNCTION__, func_get_args());
 		}
 		$this->name = $name;
@@ -53,7 +53,7 @@ class Mock implements MockInterface
 	 */
 	public function freeze()
 	{
-		if ($this->frozen) {
+		if ($this->frozen && isset($this->methods['freeze'])) {
 			return $this->__call(__FUNCTION__, func_get_args());
 		}
 		$this->frozen = TRUE;
@@ -107,7 +107,7 @@ class Mock implements MockInterface
 	 */
 	public function expects($name)
 	{
-		if ($this->frozen) {
+		if ($this->frozen && isset($this->methods['expects'])) {
 			return $this->__call(__FUNCTION__, func_get_args());
 		}
 
