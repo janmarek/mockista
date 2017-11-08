@@ -18,6 +18,10 @@ if (PHP_VERSION_ID >= 70000) {
 	require __DIR__ . '/../fixtures/7.0/methodFinder.php';
 }
 
+if (PHP_VERSION_ID >= 70100) {
+	require __DIR__ . '/../fixtures/7.1/methodFinder.php';
+}
+
 class MethodFinderTest extends \PHPUnit_Framework_TestCase
 {
 
@@ -83,9 +87,18 @@ class MethodFinderTest extends \PHPUnit_Framework_TestCase
 		if (PHP_VERSION_ID >= 70000) {
 			$methods = $this->object->methods("MethodFinderTest_Dummy1234_70");
 			$this->assertEquals('string', $methods['a']['parameters'][0]['typehint']);
-			$this->assertEquals('string', $methods['a']['returnType']);
+			$this->assertEquals('string', $methods['a']['returnType']['typehint']);
 		} else {
 			$this->markTestSkipped("Available only in PHP 7.0+");
+		}
+	}
+
+	function testNullableReturnType() {
+		if (PHP_VERSION_ID >= 70100) {
+			$methods = $this->object->methods("MethodFinderTest_Dummy1234_71");
+			$this->assertTrue($methods['a']['returnType']['allowsNull']);
+		} else {
+			$this->markTestSkipped("Available only in PHP 7.1+");
 		}
 	}
 }

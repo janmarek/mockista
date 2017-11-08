@@ -24,13 +24,25 @@ class MethodFinder
 			'static' => $method->isStatic(),
 			'passedByReference' => $this->isMethodPassedByReference($method),
 			'final' => $method->isFinal(),
-			'returnType' => PHP_VERSION_ID >= 70000 ? (string) $method->getReturnType() : NULL,
+			'returnType' => $this->getMethodReturn($method),
 		);
 	}
 
 	private function isMethodPassedByReference($method)
 	{
 		return false !== strpos($method, '&');
+	}
+
+	private function getMethodReturn(\ReflectionMethod $method)
+	{
+		if (PHP_VERSION_ID < 70000 || !$returnType = $method->getReturnType()) {
+			return NULL;
+		}
+
+		return array(
+			'typehint' => (string) $returnType,
+			'allowsNull' => PHP_VERSION_ID >= 70100 ? $returnType->allowsNull() : FALSE,
+		);
 	}
 
 	function getParameters($method)
