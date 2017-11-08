@@ -141,7 +141,7 @@ class ClassGenerator
 		$params = $this->generateParams($method['parameters']);
 		$static = $method['static'] ? 'static ' : '';
 		$passedByReference = $method['passedByReference'] ? '&' : '';
-		$returnType = $method['returnType'] ? ' : ' . $method['returnType'] : '';
+		$returnType = $method['returnType'] ? ' : ' . ($method['returnType']['allowsNull'] ? '?' : '') . $method['returnType']['typehint'] : '';
 		$out = "
 	{$static}function $passedByReference$methodName($params)$returnType
 	{
